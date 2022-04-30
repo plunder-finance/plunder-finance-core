@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.0;
 
-import "./abstract/ReaperBaseStrategyv1_1.sol";
+import "./abstract/PlunderBaseStrategyv1_1.sol";
 import "./interfaces/IMasterChef.sol";
 import "./interfaces/IUniswapV2Router02.sol";
 import "./interfaces/IUniV2Pair.sol";
@@ -10,9 +10,9 @@ import "@openzeppelin/contracts-upgradeable/token/ERC20/utils/SafeERC20Upgradeab
 import "@openzeppelin/contracts-upgradeable/utils/math/MathUpgradeable.sol";
 
 /**
- * @dev Deposit SpookySwap LP tokens into MasterChef. Harvest BOO rewards and recompound.
+ * @dev Deposit Uniswap V2 LP tokens into MasterChef. Harvest rewards and recompound.
  */
-contract ReaperStrategySpooky is ReaperBaseStrategyv1_1 {
+contract PlunderStrategyUniswapV2 is PlunderBaseStrategyv1_1 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     // 3rd-party contract addresses
@@ -56,7 +56,7 @@ contract ReaperStrategySpooky is ReaperBaseStrategyv1_1 {
         address _want,
         uint256 _poolId
     ) public initializer {
-        __ReaperBaseStrategy_init(_vault, _feeRemitters, _strategists);
+        __PlunderBaseStrategy_init(_vault, _feeRemitters, _strategists);
         want = _want;
         poolId = _poolId;
         booToWftmPath = [BOO, WFTM];

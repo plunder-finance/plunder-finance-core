@@ -9,7 +9,7 @@ import "@openzeppelin/contracts-upgradeable/proxy/utils/Initializable.sol";
 import "@openzeppelin/contracts-upgradeable/proxy/utils/UUPSUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
-abstract contract ReaperBaseStrategyv1_1 is
+abstract contract PlunderBaseStrategyv1_1 is
     IStrategy,
     UUPSUpgradeable,
     AccessControlEnumerableUpgradeable,
@@ -31,14 +31,14 @@ abstract contract ReaperBaseStrategyv1_1 is
     uint256 public upgradeProposalTime;
 
     /**
-     * Reaper Roles
+     * Plunder Finance Roles
      */
     bytes32 public constant STRATEGIST = keccak256("STRATEGIST");
     bytes32 public constant STRATEGIST_MULTISIG = keccak256("STRATEGIST_MULTISIG");
 
     /**
-     * @dev Reaper contracts:
-     * {treasury} - Address of the Reaper treasury
+     * @dev Plunder Finance contracts:
+     * {treasury} - Address of the Plunder Finance treasury
      * {vault} - Address of the vault that controls the strategy's funds.
      * {strategistRemitter} - Address where strategist fee is remitted to.
      */
@@ -90,7 +90,7 @@ abstract contract ReaperBaseStrategyv1_1 is
     /// @custom:oz-upgrades-unsafe-allow constructor
     constructor() initializer {}
 
-    function __ReaperBaseStrategy_init(
+    function __PlunderBaseStrategy_init(
         address _vault,
         address[] memory _feeRemitters,
         address[] memory _strategists
