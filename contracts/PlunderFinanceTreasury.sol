@@ -840,7 +840,7 @@ library SafeERC20 {
 
 pragma solidity ^0.6.12;
 
-contract PlunderTreasury is Ownable {
+contract PlunderFinanceTreasury is Ownable {
     using SafeERC20 for IERC20;
     using SafeMath for uint;
 

@@ -16,8 +16,8 @@ contract PlunderStrategyUniswapV2 is PlunderBaseStrategyv1_1 {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     // 3rd-party contract addresses
-    address public constant SPOOKY_ROUTER = address(0xF491e7B69E4244ad4002BC14e878a34207E38c29);
-    address public constant MASTER_CHEF = address(0x2b2929E785374c651a81A63878Ab22742656DcDd);
+    address public SPOOKY_ROUTER;
+    address public MASTER_CHEF;
 
     /**
      * @dev Tokens Used:
@@ -27,8 +27,8 @@ contract PlunderStrategyUniswapV2 is PlunderBaseStrategyv1_1 {
      * {lpToken0} - First token of the want LP
      * {lpToken1} - Second token of the want LP
      */
-    address public constant WFTM = address(0x21be370D5312f44cB42ce377BC9b8a0cEF1A4C83);
-    address public constant BOO = address(0x841FAD6EAe12c286d1Fd18d1d525DFfA75C7EFFE);
+    address public WFTM;
+    address public BOO;
     address public want;
     address public lpToken0;
     address public lpToken1;
@@ -54,11 +54,19 @@ contract PlunderStrategyUniswapV2 is PlunderBaseStrategyv1_1 {
         address[] memory _feeRemitters,
         address[] memory _strategists,
         address _want,
-        uint256 _poolId
+        uint256 _poolId,
+        address router,
+        address masterChef,
+        address baseLayerToken,
+        address dexToken
     ) public initializer {
         __PlunderBaseStrategy_init(_vault, _feeRemitters, _strategists);
         want = _want;
         poolId = _poolId;
+        BOO = dexToken;
+        MASTER_CHEF = masterChef;
+        SPOOKY_ROUTER = router;
+        WFTM = baseLayerToken;
         booToWftmPath = [BOO, WFTM];
         lpToken0 = IUniV2Pair(want).token0();
         lpToken1 = IUniV2Pair(want).token1();
