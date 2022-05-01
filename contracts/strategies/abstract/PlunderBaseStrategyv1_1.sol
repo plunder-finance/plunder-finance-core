@@ -88,7 +88,7 @@ abstract contract PlunderBaseStrategyv1_1 is
     event StrategistRemitterUpdated(address newStrategistRemitter);
 
     /// @custom:oz-upgrades-unsafe-allow constructor
-    constructor() initializer {}
+    constructor() {}
 
     function __PlunderBaseStrategy_init(
         address _vault,

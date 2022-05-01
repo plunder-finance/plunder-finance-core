@@ -8,7 +8,7 @@ const PlunderFinanceTreasury = artifacts.require('PlunderFinanceTreasury')
 const IUniV2Pair = artifacts.require('IUniV2Pair')
 const PlunderStrategyUniswapV2 = artifacts.require('PlunderStrategyUniswapV2')
 
-const [owner ] = accounts;
+const [owner, strategist1 ] = accounts;
 
 const impersonateAccount = async member => network.provider.request({ method: 'hardhat_impersonateAccount', params: [member] })
 
@@ -50,8 +50,8 @@ describe('deploy and interact with Vaults', async function () {
       }
     );
 
-    const feeRemitters = []
-    const strategists = []
+    const feeRemitters = [treasury.address, strategist1]
+    const strategists = [strategist1]
     const want = lpToken.address
 
     const strategy = await PlunderStrategyUniswapV2.new()
