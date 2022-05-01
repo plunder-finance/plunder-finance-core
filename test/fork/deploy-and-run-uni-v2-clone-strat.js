@@ -10,9 +10,7 @@ const PlunderStrategyUniswapV2 = artifacts.require('PlunderStrategyUniswapV2')
 
 const [owner, strategist1 ] = accounts;
 
-const impersonateAccount = async member => network.provider.request({ method: 'hardhat_impersonateAccount', params: [member] })
 
-const giveEther = async to => web3.eth.sendTransaction({ from: accounts[0], to, value: ether('1000000') })
 
 // Aurora
 const ADDRESSES = ALL_ADDRESSES.AURORA
@@ -22,7 +20,7 @@ const APPROVAL_DELAY = 60 // seconds
 
 let poolId = 0;
 
-describe('deploy and interact with Vaults', async function () {
+describe('deploy and interact with Uni V2 clone Vaults', async function () {
 
   it('initializes contracts', async function () {
 

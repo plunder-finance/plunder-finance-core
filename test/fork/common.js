@@ -1,3 +1,10 @@
+const { network, web3, accounts } = require("hardhat");
+const { ether } = require("@openzeppelin/test-helpers");
+
+const impersonateAccount = async member => network.provider.request({ method: 'hardhat_impersonateAccount', params: [member] })
+
+const giveEther = async to => web3.eth.sendTransaction({ from: accounts[0], to, value: ether('1000000') })
+
 const ADDRESSES = {
 
   AURORA: {
@@ -15,5 +22,7 @@ const ADDRESSES = {
 }
 
 module.exports = {
-  ADDRESSES
+  ADDRESSES,
+  impersonateAccount,
+  giveEther
 }

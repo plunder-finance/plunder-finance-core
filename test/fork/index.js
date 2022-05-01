@@ -5,5 +5,5 @@ describe('FORK TESTS', function () {
 
   console.log('fork')
 
-  require('./deploy-and-run');
+  require('./deploy-and-run-uni-v2-clone-strat');
 });
