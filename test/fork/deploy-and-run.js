@@ -20,6 +20,8 @@ const ADDRESSES = ALL_ADDRESSES.AURORA
 
 const APPROVAL_DELAY = 60 // seconds
 
+let poolId = 0;
+
 describe('deploy and interact with Vaults', async function () {
 
   it('initializes contracts', async function () {
@@ -50,16 +52,24 @@ describe('deploy and interact with Vaults', async function () {
 
     const feeRemitters = []
     const strategists = []
-    const want =
+    const want = lpToken.address
 
     const strategy = await PlunderStrategyUniswapV2.new()
+
+    const masterChef = ADDRESSES.TRISOLARIS.MASTER_CHEF
+    const dexToken = ADDRESSES.TRISOLARIS.TRI
+    const baseLayerToken = wethAddress
 
     await strategy.initialize(
       vault.address,
       feeRemitters,
       strategists,
       lpToken.address,
-      poolId
+      poolId++,
+      uniswapV2Router02.address,
+      masterChef,
+      baseLayerToken,
+      dexToken
     );
 
 
