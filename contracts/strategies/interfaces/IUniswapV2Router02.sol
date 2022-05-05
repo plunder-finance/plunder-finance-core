@@ -50,5 +50,10 @@ interface IUniswapV2Router02 is IUniswapV2Router01 {
         uint256 deadline
     ) external;
 
+    function getAmountsOut(uint256 amountIn, address[] memory path)
+    external
+    view
+    returns (uint256[] memory amounts);
+
     function WETH() external pure returns (address);
 }
