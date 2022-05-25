@@ -14,13 +14,13 @@ abstract contract FeeManagerCake is StratManagerCake {
     uint public withdrawalFee = 0;
 
     uint public callFee = 0;
-    uint public beefyFee = MAX_FEE - callFee;
+    uint public plunderFee = MAX_FEE - callFee;
 
     function setCallFee(uint256 _fee) external onlyManager {
         require(_fee <= MAX_CALL_FEE, "!cap");
-        
+
         callFee = _fee;
-        beefyFee = MAX_FEE - callFee;
+        plunderFee = MAX_FEE - callFee;
     }
 
     function setWithdrawalFee(uint256 _fee) external onlyManager {

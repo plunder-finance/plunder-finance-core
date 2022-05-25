@@ -20,12 +20,12 @@ contract BeTokenBatch is Ownable {
     IERC20 public want;
     IERC20 public native;
     IRewardPool public rewardPool;
-    address public beefyFeeBatch;
-    IUniswapRouterETH public unirouter; 
+    address public plunderFeeBatch;
+    IUniswapRouterETH public unirouter;
     address[] public route;
 
     uint256 public constant MAX = 10000;
-    uint256 public fee = 1000; 
+    uint256 public fee = 1000;
 
     event NewRewardPool(IRewardPool oldRewardPool, IRewardPool newRewardPool);
     event NewFeeBatch(address oldFeeBatch, address newFeeBatch);
@@ -36,13 +36,13 @@ contract BeTokenBatch is Ownable {
 
     constructor(
         address _rewardPool,
-        address _unirouter, 
-        address _beefyFeeBatch,
+        address _unirouter,
+        address _plunderFeeBatch,
         address[] memory _route
     ) {
         rewardPool = IRewardPool(_rewardPool);
         unirouter = IUniswapRouterETH(_unirouter);
-        beefyFeeBatch = _beefyFeeBatch;
+        plunderFeeBatch = _plunderFeeBatch;
         route = _route;
 
         want = IERC20(route[0]);
@@ -58,12 +58,12 @@ contract BeTokenBatch is Ownable {
     // Main function. Harvest and notify beCake reward pool.
     function harvest() public {
         require(balanceOfWant() > 0, "nothing to harvest");
-        
+
         // Charge the fee
         uint256 feeBal;
         if (fee > 0) {
             feeBal = balanceOfWant() * fee / MAX;
-            unirouter.swapExactTokensForTokens(feeBal, 0, route, beefyFeeBatch, block.timestamp);
+            unirouter.swapExactTokensForTokens(feeBal, 0, route, plunderFeeBatch, block.timestamp);
         }
 
         uint256 wantBal = balanceOfWant();
@@ -79,17 +79,17 @@ contract BeTokenBatch is Ownable {
     }
 
     function setFeeBatch(address _feeBatch) external onlyOwner {
-        emit NewFeeBatch(beefyFeeBatch, _feeBatch);
-        beefyFeeBatch = _feeBatch;
+        emit NewFeeBatch(plunderFeeBatch, _feeBatch);
+        plunderFeeBatch = _feeBatch;
     }
-     
-     
+
+
     function setUnirouter(IUniswapRouterETH _unirouter) external onlyOwner {
         emit NewUnirouter(unirouter, _unirouter);
         want.safeApprove(address(unirouter), 0);
         want.safeApprove(address(_unirouter), type(uint256).max);
         unirouter = _unirouter;
-        
+
     }
 
      function setRoute(address[] memory _route) external onlyOwner {
@@ -103,7 +103,7 @@ contract BeTokenBatch is Ownable {
         require(fee <= 1000, "fee too large");
         fee = _fee;
     }
-    
+
     // Rescue locked funds sent by mistake
     function inCaseTokensGetStuck(address _token, address _recipient) external onlyOwner {
         require(_token != address(want), "!safe");

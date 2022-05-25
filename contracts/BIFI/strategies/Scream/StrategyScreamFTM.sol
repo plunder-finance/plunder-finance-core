@@ -16,7 +16,7 @@ import "../Common/StratManager.sol";
 import "../Common/FeeManager.sol";
 
 
-//Lending Strategy 
+//Lending Strategy
 contract StrategyScreamFTM is StratManager, FeeManager {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
@@ -54,10 +54,10 @@ contract StrategyScreamFTM is StratManager, FeeManager {
 
     /**
      * @dev Helps to differentiate borrowed funds that shouldn't be used in functions like 'deposit()'
-     * as they're required to deleverage correctly.  
+     * as they're required to deleverage correctly.
      */
     uint256 public reserves;
-    
+
     uint256 public balanceOfPool;
 
     /**
@@ -78,8 +78,8 @@ contract StrategyScreamFTM is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         borrowRate = _borrowRate;
         borrowRateMax = _borrowRateMax;
         borrowDepth = _borrowDepth;
@@ -97,7 +97,7 @@ contract StrategyScreamFTM is StratManager, FeeManager {
         require(_outputToWantRoute[_outputToWantRoute.length - 1] == want, "outputToNativeRoute[last] != want");
         outputToWantRoute = _outputToWantRoute;
 
-      
+
 
         _giveAllowances();
 
@@ -113,7 +113,7 @@ contract StrategyScreamFTM is StratManager, FeeManager {
         if (wantBal > 0) {
             _leverage(wantBal);
         }
-        
+
     }
 
     /**
@@ -130,7 +130,7 @@ contract StrategyScreamFTM is StratManager, FeeManager {
         }
 
         reserves = reserves.add(_amount);
-        
+
         updateBalance();
     }
 
@@ -149,22 +149,22 @@ contract StrategyScreamFTM is StratManager, FeeManager {
 
             borrowBal = IVToken(iToken).borrowBalanceCurrent(address(this));
             uint256 targetSupply = borrowBal.mul(100).div(borrowRate);
-        
+
             uint256 supplyBal = IVToken(iToken).balanceOfUnderlying(address(this));
             IVToken(iToken).redeemUnderlying(supplyBal.sub(targetSupply));
             wantBal = IERC20(want).balanceOf(address(this));
         }
 
         IVToken(iToken).repayBorrow(uint256(-1));
-        
+
         uint256 iTokenBal = IERC20(iToken).balanceOf(address(this));
         IVToken(iToken).redeem(iTokenBal);
 
         reserves = 0;
-        
+
         updateBalance();
     }
-    
+
 
     /**
      * @dev Extra safety measure that allows us to manually unwind one level. In case we somehow get into
@@ -180,16 +180,16 @@ contract StrategyScreamFTM is StratManager, FeeManager {
 
         uint256 borrowBal = IVToken(iToken).borrowBalanceCurrent(address(this));
         uint256 targetSupply = borrowBal.mul(100).div(_borrowRate);
-        
+
         uint256 supplyBal = IVToken(iToken).balanceOfUnderlying(address(this));
         IVToken(iToken).redeemUnderlying(supplyBal.sub(targetSupply));
-        
+
         wantBal = IERC20(want).balanceOf(address(this));
         reserves = wantBal;
-        
+
         updateBalance();
     }
-    
+
 
 
     /**
@@ -237,8 +237,8 @@ contract StrategyScreamFTM is StratManager, FeeManager {
         uint256 callFeeAmount = feeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = feeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = feeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = feeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -296,7 +296,7 @@ contract StrategyScreamFTM is StratManager, FeeManager {
         }
         updateBalance();
     }
-    
+
     // return supply and borrow balance
     function updateBalance() public {
         uint256 supplyBal = IVToken(iToken).balanceOfUnderlying(address(this));

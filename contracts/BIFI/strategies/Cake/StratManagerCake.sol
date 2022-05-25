@@ -15,25 +15,25 @@ contract StratManagerCake is Ownable, Pausable {
     address public keeper;
     address public unirouter;
     address public vault;
-    address public beefyFeeRecipient;
+    address public plunderFeeRecipient;
 
     /**
      * @dev Initializes the base strategy.
      * @param _keeper address to use as alternative owner.
      * @param _unirouter router to use for swaps
      * @param _vault address of parent vault.
-     * @param _beefyFeeRecipient address where to send Beefy's fees.
+     * @param _plunderFeeRecipient address where to send Beefy's fees.
      */
     constructor(
         address _keeper,
         address _unirouter,
         address _vault,
-        address _beefyFeeRecipient
+        address _plunderFeeRecipient
     ) public {
         keeper = _keeper;
         unirouter = _unirouter;
         vault = _vault;
-        beefyFeeRecipient = _beefyFeeRecipient;
+        plunderFeeRecipient = _plunderFeeRecipient;
     }
 
     // checks that caller is either owner or keeper.
@@ -67,11 +67,11 @@ contract StratManagerCake is Ownable, Pausable {
     }
 
     /**
-     * @dev Updates beefy fee recipient.
-     * @param _beefyFeeRecipient new beefy fee recipient address.
+     * @dev Updates plunder fee recipient.
+     * @param _plunderFeeRecipient new plunder fee recipient address.
      */
-    function setBeefyFeeRecipient(address _beefyFeeRecipient) external onlyOwner {
-        beefyFeeRecipient = _beefyFeeRecipient;
+    function setBeefyFeeRecipient(address _plunderFeeRecipient) external onlyOwner {
+        plunderFeeRecipient = _plunderFeeRecipient;
     }
 
     /**

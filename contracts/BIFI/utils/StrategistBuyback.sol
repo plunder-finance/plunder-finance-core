@@ -45,7 +45,7 @@ contract StrategistBuyback is OwnableUpgradeable {
 
     function initialize(
         address _bifiMaxi,
-        address _unirouter, 
+        address _unirouter,
         address[] memory _nativeToWantRoute
     ) public initializer {
         __Ownable_init();
@@ -71,7 +71,7 @@ contract StrategistBuyback is OwnableUpgradeable {
         _withdrawVaultWantFromBifiMaxi();
     }
 
-    // Convert and send to beefy maxi
+    // Convert and send to plunder maxi
     function harvest() public {
         uint256 nativeBal = IERC20_StrategistBuyback(native).balanceOf(address(this));
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(nativeBal, 0, nativeToWantRoute, address(this), block.timestamp);
@@ -99,7 +99,7 @@ contract StrategistBuyback is OwnableUpgradeable {
     function setNativeToWantRoute(address[] memory _route) external onlyOwner {
         _setNativeToWantRoute(_route);
     }
-    
+
     function withdrawToken(address _token) external onlyOwner {
         uint256 amount = IERC20_StrategistBuyback(_token).balanceOf(address(this));
         IERC20_StrategistBuyback(_token).transfer(msg.sender, amount);
@@ -131,7 +131,7 @@ contract StrategistBuyback is OwnableUpgradeable {
 
     function trackVault(address _vaultAddress) public onlyOwner {
         trackedVaults.push(_vaultAddress);
-        trackedVaultsArrayIndex[_vaultAddress] = trackedVaults.length - 1; // new vault will have last index of 
+        trackedVaultsArrayIndex[_vaultAddress] = trackedVaults.length - 1; // new vault will have last index of
         emit TrackingVault(_vaultAddress);
     }
 

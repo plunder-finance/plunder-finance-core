@@ -49,10 +49,10 @@ contract StrategyOXDxBOO is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToUnstakedWantRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -146,8 +146,8 @@ contract StrategyOXDxBOO is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -191,13 +191,13 @@ contract StrategyOXDxBOO is StratManager, FeeManager, GasThrottler {
     function rewardsAvailable() public view returns (uint256) {
         string memory signature = StringUtils.concat(pendingRewardsFunctionName, "(uint256,address)");
         bytes memory result = Address.functionStaticCall(
-            chef, 
+            chef,
             abi.encodeWithSignature(
                 signature,
                 poolId,
                 address(this)
             )
-        );  
+        );
         return abi.decode(result, (uint256));
     }
 
@@ -207,7 +207,7 @@ contract StrategyOXDxBOO is StratManager, FeeManager, GasThrottler {
         uint256 nativeOut;
         if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

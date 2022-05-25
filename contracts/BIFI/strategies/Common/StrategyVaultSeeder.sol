@@ -9,7 +9,7 @@
 
 // import "../../interfaces/common/IUniswapRouterETH.sol";
 // import "../../interfaces/common/IUniswapV2Pair.sol";
-// import "../../interfaces/beefy/ISeededVault.sol";
+// import "../../interfaces/plunder/ISeededVault.sol";
 // import "./StratManager.sol";
 
 // contract StrategyCake is Ownable {
@@ -53,7 +53,7 @@
 //         // 1. Remove liquidity from old pair.
 //         uint lpPairBal = IERC20(lpPair).balanceOf(address(this));
 //         IUniswapRouterETH(oldUnirouter).removeLiquidity(lpToken0, lpToken1, lpPairBal, 1, 1, address(this), now);
-        
+
 //         // 2. Add liquidity to new pair.
 //         uint lp0Bal = IERC20(lpToken0).balanceOf(address(this));
 //         uint lp1Bal = IERC20(lpToken1).balanceOf(address(this));

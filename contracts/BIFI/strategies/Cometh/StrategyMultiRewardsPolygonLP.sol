@@ -47,16 +47,16 @@ contract StrategyMultiRewardsPolygonLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         lpToken0 = IUniswapV2Pair(want).token0();
         lpToken1 = IUniswapV2Pair(want).token1();
         rewardPool = _rewardPool;
         secondOutput = _secondOutput;
-        
+
         secondOutputToOutputRoute = [secondOutput, output];
-        
+
         if (lpToken0 == matic) {
             outputToLp0Route = [output, matic];
         } else if (lpToken0 == eth) {
@@ -121,7 +121,7 @@ contract StrategyMultiRewardsPolygonLP is StratManager, FeeManager {
     function chargeFees() internal {
         uint256 toOutput = IERC20(secondOutput).balanceOf(address(this));
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(toOutput, 0, secondOutputToOutputRoute, address(this), now);
-        
+
         uint256 toMatic = IERC20(output).balanceOf(address(this)).mul(45).div(1000);
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(toMatic, 0, outputToMaticRoute, address(this), now);
 
@@ -130,8 +130,8 @@ contract StrategyMultiRewardsPolygonLP is StratManager, FeeManager {
         uint256 callFeeAmount = maticBal.mul(callFee).div(MAX_FEE);
         IERC20(matic).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = maticBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(matic).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = maticBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(matic).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = maticBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(matic).safeTransfer(strategist, strategistFee);

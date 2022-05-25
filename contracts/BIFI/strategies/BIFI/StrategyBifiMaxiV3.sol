@@ -35,7 +35,7 @@ contract StrategyBifiMaxiV3 is StratManager {
 
     // Routes
     address[] public outputToWantRoute;
-    
+
 
     bool public harvestOnDeposit;
     uint256 public lastHarvest;
@@ -52,16 +52,16 @@ contract StrategyBifiMaxiV3 is StratManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToWantRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         rewardPool = _rewardPool;
-        
+
         require(_outputToWantRoute[_outputToWantRoute.length - 1] == want, "outputToWantRoute[last] != want");
         outputToWantRoute = _outputToWantRoute;
         output = _outputToWantRoute[0];
-       
+
 
         _giveAllowances();
     }
@@ -197,7 +197,7 @@ contract StrategyBifiMaxiV3 is StratManager {
 
         callFeeAmount = _fee;
     }
-   
+
 
     // called as part of strat migration. Sends all the available funds back to the vault.
     function retireStrat() external {

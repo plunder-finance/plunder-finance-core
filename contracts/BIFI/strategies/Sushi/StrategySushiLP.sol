@@ -54,11 +54,11 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -67,7 +67,7 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
         output = _outputToNativeRoute[0];
         native = _outputToNativeRoute[_outputToNativeRoute.length - 1];
         outputToNativeRoute = _outputToNativeRoute;
-        
+
         // setup lp routing
         lpToken0 = IUniswapV2Pair(want).token0();
         require(_outputToLp0Route[0] == output);
@@ -115,7 +115,7 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
         if (tx.origin == owner() || paused()) {
             IERC20(want).safeTransfer(vault, wantBal);
         } else {
-            uint256 withdrawalFeeAmount = wantBal.mul(withdrawalFee).div(WITHDRAWAL_MAX);	
+            uint256 withdrawalFeeAmount = wantBal.mul(withdrawalFee).div(WITHDRAWAL_MAX);
             IERC20(want).safeTransfer(vault, wantBal.sub(withdrawalFeeAmount));
         }
          emit Withdraw(balanceOf());
@@ -161,7 +161,7 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
         if (toOutput > 0) {
             IUniswapRouterETH(unirouter).swapExactTokensForTokens(toOutput, 0, nativeToOutputRoute, address(this), now);
         }
-        
+
         uint256 toNative = IERC20(output).balanceOf(address(this)).mul(45).div(1000);
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(toNative, 0, outputToNativeRoute, address(this), now);
 
@@ -170,8 +170,8 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeReciepient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -206,7 +206,7 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
 
     // it calculates how much 'want' the strategy has working in the farm.
     function balanceOfPool() public view returns (uint256) {
-        (uint256 _amount, ) = IMiniChefV2(chef).userInfo(poolId, address(this));	
+        (uint256 _amount, ) = IMiniChefV2(chef).userInfo(poolId, address(this));
         return _amount;
     }
 
@@ -221,7 +221,7 @@ contract StrategySushiLP is StratManager, FeeManager, GasThrottler {
         uint256 nativeOut;
          if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

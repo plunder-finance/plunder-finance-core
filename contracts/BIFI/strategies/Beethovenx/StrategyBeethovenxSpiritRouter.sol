@@ -54,10 +54,10 @@ contract StrategyBeethovenxSpiritRouter is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _secondOutputToNativeRoute,
         address[] memory _nativeToInputRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         wantPoolId = _balancerPoolIds[0];
         nativeSwapPoolId = _balancerPoolIds[1];
         chefPoolId = _chefPoolId;
@@ -154,19 +154,19 @@ contract StrategyBeethovenxSpiritRouter is StratManager, FeeManager {
         if (toNative > 0) {
             balancerSwap(nativeSwapPoolId, output, native, toNative);
         }
-        
+
         toNative = IERC20(secondOutput).balanceOf(address(this));
         if (toNative > 0) {
             IUniswapRouterETH(spiritRouter).swapExactTokensForTokens(toNative, 0, secondOutputToNativeRoute, address(this), now);
         }
-        
+
         uint256 nativeBal = IERC20(native).balanceOf(address(this)).mul(45).div(1000);
 
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);

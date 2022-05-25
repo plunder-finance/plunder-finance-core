@@ -40,7 +40,7 @@ contract StrategyBeamChefLP is StratManager, FeeManager, GasThrottler {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _want,
@@ -50,11 +50,11 @@ contract StrategyBeamChefLP is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = IBeamChef(_chef);
@@ -153,12 +153,12 @@ contract StrategyBeamChefLP is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFee);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFee);
     }
 
     // Adds liquidity to AMM and gets more LP tokens.
@@ -206,7 +206,7 @@ contract StrategyBeamChefLP is StratManager, FeeManager, GasThrottler {
         uint256 nativeOut;
         if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

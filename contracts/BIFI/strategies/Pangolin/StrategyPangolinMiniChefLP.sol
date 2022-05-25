@@ -47,7 +47,7 @@ contract StrategyPangolinMiniChefLP is StratManager, FeeManager, GasThrottler{
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _want,
@@ -57,11 +57,11 @@ contract StrategyPangolinMiniChefLP is StratManager, FeeManager, GasThrottler{
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -172,13 +172,13 @@ contract StrategyPangolinMiniChefLP is StratManager, FeeManager, GasThrottler{
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFeeAmount = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFeeAmount);
 
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFeeAmount);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFeeAmount);
     }
 
     // Adds liquidity to AMM and gets more LP tokens.
@@ -242,7 +242,7 @@ contract StrategyPangolinMiniChefLP is StratManager, FeeManager, GasThrottler{
         (uint256 pngReward, uint256[] memory secondaryRewards) = rewardsAvailable();
         uint256 nativeBal;
         try IUniswapRouterETH(unirouter).getAmountsOut(pngReward, outputToNativeRoute)
-            returns (uint256[] memory amountOut) 
+            returns (uint256[] memory amountOut)
         {
             nativeBal = amountOut[amountOut.length -1];
         }
@@ -357,7 +357,7 @@ contract StrategyPangolinMiniChefLP is StratManager, FeeManager, GasThrottler{
     function outputToLp1() external view returns (address[] memory) {
         return outputToLp1Route;
     }
-    
+
     function rewardToOutput() external view returns (address[][] memory) {
         return rewardToOutputRoute;
     }

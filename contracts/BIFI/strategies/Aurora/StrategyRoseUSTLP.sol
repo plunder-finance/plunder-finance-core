@@ -46,7 +46,7 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _want,
@@ -56,11 +56,11 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _rewardToOutputRoute,
         address[] memory _outputToStableRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         rewardPool = _rewardPool;
         metaRouter = _metaRouter;
@@ -74,12 +74,12 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
 
         stable = _outputToStableRoute[_outputToStableRoute.length - 1];
         outputToStableRoute = _outputToStableRoute;
-      
+
         _giveAllowances();
     }
 
     // Grabs deposits from vault
-    function deposit() public whenNotPaused {} 
+    function deposit() public whenNotPaused {}
 
     // Puts the funds to work
     function sweep() public whenNotPaused {
@@ -171,8 +171,8 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -180,13 +180,13 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
         liquidityBal = IERC20(output).balanceOf(address(this));
         bool trade = canTrade(liquidityBal, outputToStableRoute);
         require(trade == true, "Not enough output");
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFee);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFee);
     }
 
     function swap() internal  {
         uint256 outputRemaining = liquidityBal;
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(outputRemaining, 0, outputToStableRoute, address(this), now);
-        
+
         liquidityBal = 0;
         swapped = true;
     }
@@ -197,11 +197,11 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
         uint256[2] memory amounts;
         amounts[0] = stableBal;
         ICurveSwap(metaRouter).add_liquidity(amounts, 0);
-        
+
         liquidityAdded = true;
     }
 
-    // Toggle harvest cycle to false to start again 
+    // Toggle harvest cycle to false to start again
     function toggleHarvest() internal {
         feesCharged = false;
         swapped = false;
@@ -237,7 +237,7 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
         {
             second = amountOut[amountOut.length -1];
         }
-            catch {} 
+            catch {}
         }
         return first.add(second);
     }
@@ -245,15 +245,15 @@ contract StrategyRoseUSTLP is StratManager, FeeManager, GasThrottler {
     // Validates if we can trade because of decimals
     function canTrade(uint256 tradeableOutput, address[] memory route) internal view returns (bool tradeable) {
         try IUniswapRouterETH(unirouter).getAmountsOut(tradeableOutput, route)
-            returns (uint256[] memory amountOut) 
+            returns (uint256[] memory amountOut)
             {
                 uint256 amount = amountOut[amountOut.length -1];
                 if (amount > 0) {
                     tradeable = true;
                 }
             }
-            catch { 
-                tradeable = false; 
+            catch {
+                tradeable = false;
             }
     }
 

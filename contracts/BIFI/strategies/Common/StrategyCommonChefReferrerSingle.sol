@@ -49,10 +49,10 @@ contract StrategyCommonChefReferrerSingle is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToWantRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -101,7 +101,7 @@ contract StrategyCommonChefReferrerSingle is StratManager, FeeManager {
     function beforeDeposit() external override {
         require(msg.sender == vault, "!vault");
         if (want == output) {
-            _harvest(nullAddress);	
+            _harvest(nullAddress);
         }
     }
 
@@ -146,8 +146,8 @@ contract StrategyCommonChefReferrerSingle is StratManager, FeeManager {
             IERC20(native).safeTransfer(tx.origin, callFeeAmount);
         }
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);

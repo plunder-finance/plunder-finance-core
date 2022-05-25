@@ -839,27 +839,27 @@ contract BeefyUniV2Zap {
         assert(msg.sender == WETH);
     }
 
-    function beefInETH (address beefyVault, uint256 tokenAmountOutMin) external payable {
+    function beefInETH (address plunderVault, uint256 tokenAmountOutMin) external payable {
         require(msg.value >= minimumAmount, 'Beefy: Insignificant input amount');
 
         IWETH(WETH).deposit{value: msg.value}();
 
-        _swapAndStake(beefyVault, tokenAmountOutMin, WETH);
+        _swapAndStake(plunderVault, tokenAmountOutMin, WETH);
     }
 
-    function beefIn (address beefyVault, uint256 tokenAmountOutMin, address tokenIn, uint256 tokenInAmount) external {
+    function beefIn (address plunderVault, uint256 tokenAmountOutMin, address tokenIn, uint256 tokenInAmount) external {
         require(tokenInAmount >= minimumAmount, 'Beefy: Insignificant input amount');
         require(IERC20(tokenIn).allowance(msg.sender, address(this)) >= tokenInAmount, 'Beefy: Input token is not approved');
 
         IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), tokenInAmount);
 
-        _swapAndStake(beefyVault, tokenAmountOutMin, tokenIn);
+        _swapAndStake(plunderVault, tokenAmountOutMin, tokenIn);
     }
 
-    function beefOut (address beefyVault, uint256 withdrawAmount) external {
-        (IBeefyVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(beefyVault);
+    function beefOut (address plunderVault, uint256 withdrawAmount) external {
+        (IBeefyVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
-        IERC20(beefyVault).safeTransferFrom(msg.sender, address(this), withdrawAmount);
+        IERC20(plunderVault).safeTransferFrom(msg.sender, address(this), withdrawAmount);
         vault.withdraw(withdrawAmount);
 
         if (pair.token0() != WETH && pair.token1() != WETH) {
@@ -875,8 +875,8 @@ contract BeefyUniV2Zap {
         _returnAssets(tokens);
     }
 
-    function beefOutAndSwap(address beefyVault, uint256 withdrawAmount, address desiredToken, uint256 desiredTokenOutMin) external {
-        (IBeefyVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(beefyVault);
+    function beefOutAndSwap(address plunderVault, uint256 withdrawAmount, address desiredToken, uint256 desiredTokenOutMin) external {
+        (IBeefyVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
         address token0 = pair.token0();
         address token1 = pair.token1();
         require(token0 == desiredToken || token1 == desiredToken, 'Beefy: desired token not present in liqudity pair');
@@ -904,14 +904,14 @@ contract BeefyUniV2Zap {
         require(amount1 >= minimumAmount, 'UniswapV2Router: INSUFFICIENT_B_AMOUNT');
     }
 
-    function _getVaultPair (address beefyVault) private view returns (IBeefyVaultV6 vault, IUniswapV2Pair pair) {
-        vault = IBeefyVaultV6(beefyVault);
+    function _getVaultPair (address plunderVault) private view returns (IBeefyVaultV6 vault, IUniswapV2Pair pair) {
+        vault = IBeefyVaultV6(plunderVault);
         pair = IUniswapV2Pair(vault.want());
         require(pair.factory() == router.factory(), 'Beefy: Incompatible liquidity pair factory');
     }
 
-    function _swapAndStake(address beefyVault, uint256 tokenAmountOutMin, address tokenIn) private {
-        (IBeefyVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(beefyVault);
+    function _swapAndStake(address plunderVault, uint256 tokenAmountOutMin, address tokenIn) private {
+        (IBeefyVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
         (uint256 reserveA, uint256 reserveB,) = pair.getReserves();
         require(reserveA > minimumAmount && reserveB > minimumAmount, 'Beefy: Liquidity pair reserves too low');
@@ -969,9 +969,9 @@ contract BeefyUniV2Zap {
         swapAmount = investmentA.sub(Babylonian.sqrt(halfInvestment * halfInvestment * nominator / denominator));
     }
 
-    function estimateSwap(address beefyVault, address tokenIn, uint256 fullInvestmentIn) public view returns(uint256 swapAmountIn, uint256 swapAmountOut, address swapTokenOut) {
+    function estimateSwap(address plunderVault, address tokenIn, uint256 fullInvestmentIn) public view returns(uint256 swapAmountIn, uint256 swapAmountOut, address swapTokenOut) {
         checkWETH();
-        (, IUniswapV2Pair pair) = _getVaultPair(beefyVault);
+        (, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
         bool isInputA = pair.token0() == tokenIn;
         require(isInputA || pair.token1() == tokenIn, 'Beefy: Input token not present in liqudity pair');

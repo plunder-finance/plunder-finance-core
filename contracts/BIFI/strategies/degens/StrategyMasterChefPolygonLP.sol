@@ -45,8 +45,8 @@ contract StrategyMasterChefPolygonLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         lpToken0 = IUniswapV2Pair(want).token0();
         lpToken1 = IUniswapV2Pair(want).token1();
@@ -118,8 +118,8 @@ contract StrategyMasterChefPolygonLP is StratManager, FeeManager {
         uint256 callFeeAmount = wrappedBal.mul(callFee).div(MAX_FEE);
         IERC20(wrapped).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = wrappedBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(wrapped).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = wrappedBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(wrapped).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = wrappedBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(wrapped).safeTransfer(strategist, strategistFee);

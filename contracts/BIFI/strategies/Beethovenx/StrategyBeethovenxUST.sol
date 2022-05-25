@@ -44,7 +44,7 @@ contract StrategyBeethovenxUST is StratManager, FeeManager {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         bytes32[] memory _balancerPoolIds,
@@ -55,9 +55,9 @@ contract StrategyBeethovenxUST is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _inputToNativeRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         wantPoolId = _balancerPoolIds[0];
         chefPoolId = _chefPoolId;
         chef = _chef;
@@ -151,24 +151,24 @@ contract StrategyBeethovenxUST is StratManager, FeeManager {
         if (outputBal > 0) {
             balancerSwap(wantPoolId, output, input, outputBal);
         }
-        
+
         uint256 inputBal = IERC20(input).balanceOf(address(this));
         if (inputBal > 0) {
             IUniswapRouterETH(spiritRouter).swapExactTokensForTokens(inputBal, 0, inputToNativeRoute, address(this), now);
         }
-        
+
         uint256 nativeBal = IERC20(native).balanceOf(address(this));
 
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFeeAmount = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFeeAmount);
 
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFeeAmount);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFeeAmount);
     }
 
     // Adds liquidity to AMM and gets more LP tokens.

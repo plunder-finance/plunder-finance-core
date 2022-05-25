@@ -38,7 +38,7 @@ contract StrategyAaveSupplyOnly is StratManager, FeeManager {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _want,
@@ -50,8 +50,8 @@ contract StrategyAaveSupplyOnly is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         native = _native;
 
@@ -142,13 +142,13 @@ contract StrategyAaveSupplyOnly is StratManager, FeeManager {
         uint256 callFeeAmount = nativeFeeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeFeeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeFeeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFeeAmount = nativeFeeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFeeAmount);
 
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFeeAmount);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFeeAmount);
     }
 
     // swap rewards to {want}

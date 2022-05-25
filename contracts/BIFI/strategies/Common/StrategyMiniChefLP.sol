@@ -53,12 +53,12 @@ contract StrategyMiniChefLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _rewardToOutputRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -170,8 +170,8 @@ contract StrategyMiniChefLP is StratManager, FeeManager {
             IERC20(native).safeTransfer(tx.origin, callFeeAmount);
         }
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -231,7 +231,7 @@ contract StrategyMiniChefLP is StratManager, FeeManager {
         uint256 nativeOut;
          if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }
@@ -242,7 +242,7 @@ contract StrategyMiniChefLP is StratManager, FeeManager {
         address rewarder = IMiniChefV2(chef).rewarder(poolId);
         if (rewarder != nullAddress) {
             pendingNative = IRewarder(rewarder).pendingToken(poolId, address(this));
-        } 
+        }
 
         return pendingNative.add(nativeOut).mul(45).div(1000).mul(callFee).div(MAX_FEE);
     }

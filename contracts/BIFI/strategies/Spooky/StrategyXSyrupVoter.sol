@@ -16,7 +16,7 @@ contract StrategyXSyrupVoter is StrategyXSyrup, DelegateManagerCommon {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToWantRoute,
         bytes32 _id,
@@ -30,7 +30,7 @@ contract StrategyXSyrupVoter is StrategyXSyrup, DelegateManagerCommon {
         _unirouter,
         _keeper,
         _strategist,
-        _beefyFeeRecipient,
+        _plunderFeeRecipient,
         _outputToNativeRoute,
         _outputToWantRoute
     ) DelegateManagerCommon(_id, _voter) public {}

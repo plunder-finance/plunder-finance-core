@@ -44,7 +44,7 @@ contract StrategyChefCurveLP is StratManager, FeeManager, GasThrottler {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _want,
@@ -60,8 +60,8 @@ contract StrategyChefCurveLP is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -159,13 +159,13 @@ contract StrategyChefCurveLP is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFeeAmount = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFeeAmount);
 
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFeeAmount);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFeeAmount);
     }
 
     // Adds liquidity to AMM and gets more LP tokens.
@@ -222,13 +222,13 @@ contract StrategyChefCurveLP is StratManager, FeeManager, GasThrottler {
     function rewardsAvailable() public view returns (uint256) {
         string memory signature = StringUtils.concat(pendingRewardsFunctionName, "(uint256,address)");
         bytes memory result = Address.functionStaticCall(
-            chef, 
+            chef,
             abi.encodeWithSignature(
                 signature,
                 poolId,
                 address(this)
             )
-        );  
+        );
         return abi.decode(result, (uint256));
     }
 
@@ -238,7 +238,7 @@ contract StrategyChefCurveLP is StratManager, FeeManager, GasThrottler {
         uint256 nativeOut;
         if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

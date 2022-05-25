@@ -15,7 +15,7 @@ contract StrategyNewQuickVoter is StrategyNewQuick, DelegateManagerCommon {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToWantRoute,
         address[] memory _outputToOldWantRoute,
@@ -29,7 +29,7 @@ contract StrategyNewQuickVoter is StrategyNewQuick, DelegateManagerCommon {
         _unirouter,
         _keeper,
         _strategist,
-        _beefyFeeRecipient,
+        _plunderFeeRecipient,
         _outputToNativeRoute,
         _outputToWantRoute,
         _outputToOldWantRoute

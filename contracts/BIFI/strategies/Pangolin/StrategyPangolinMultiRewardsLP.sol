@@ -54,12 +54,12 @@ contract StrategyPangolinMultiRewardsLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[][] memory _rewardToNativeRoutes,
         address[] memory _nativeToLp0Route,
         address[] memory _nativeToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
 
@@ -166,14 +166,14 @@ contract StrategyPangolinMultiRewardsLP is StratManager, FeeManager {
         if (outputBal > 0) {
             IUniswapRouterETH(unirouter).swapExactTokensForTokens(outputBal, 0, outputToNativeRoute, address(this), now);
         }
-        
+
         uint256 nativeBal = IERC20(native).balanceOf(address(this)).mul(45).div(1000);
 
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -240,7 +240,7 @@ contract StrategyPangolinMultiRewardsLP is StratManager, FeeManager {
         (uint256 pngReward, uint256[] memory secondaryRewards) = rewardsAvailable();
         uint256 nativeBal;
         try IUniswapRouterETH(unirouter).getAmountsOut(pngReward, outputToNativeRoute)
-            returns (uint256[] memory amountOut) 
+            returns (uint256[] memory amountOut)
         {
             nativeBal = amountOut[amountOut.length -1];
         }
@@ -348,7 +348,7 @@ contract StrategyPangolinMultiRewardsLP is StratManager, FeeManager {
     function nativeToLp1() external view returns (address[] memory) {
         return nativeToLp1Route;
     }
-    
+
     function reward0ToNative() external view returns (address[] memory) {
         return rewardToNativeRoutes[0];
     }

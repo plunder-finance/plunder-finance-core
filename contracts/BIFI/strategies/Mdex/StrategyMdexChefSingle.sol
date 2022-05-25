@@ -53,16 +53,16 @@ contract StrategyMdexChefSingle is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToWantRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
 
         outputToWantRoute = _outputToWantRoute;
         output = outputToWantRoute[0];
-        
+
         wantToOutputRoute = [want, output];
 
         _giveAllowances();
@@ -124,18 +124,18 @@ contract StrategyMdexChefSingle is StratManager, FeeManager {
         ISwapMining(swapContract).takerWithdraw();
         uint256 afterClaim = IERC20(want).balanceOf(address(this));
         uint256 claimDelta = afterClaim.sub(beforeClaim);
-     
+
         if (claimDelta > 0) {
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(claimDelta, 0, wantToOutputRoute, address(this), block.timestamp);
         }
-                    
+
         uint256 nativeBal = IERC20(output).balanceOf(address(this)).mul(45).div(1000);
 
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(output).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(output).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(output).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(output).safeTransfer(strategist, strategistFee);

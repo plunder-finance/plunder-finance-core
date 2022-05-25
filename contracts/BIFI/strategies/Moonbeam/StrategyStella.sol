@@ -38,7 +38,7 @@ contract StrategyStella is StratManager, FeeManager {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _xWant,
@@ -48,9 +48,9 @@ contract StrategyStella is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         xWant = _xWant;
         want = IxWant(xWant).stella();
         poolId = _poolId;
@@ -161,13 +161,13 @@ contract StrategyStella is StratManager, FeeManager {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFeeAmount = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFeeAmount);
 
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFeeAmount);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFeeAmount);
     }
 
     // Adds liquidity to AMM and gets more LP tokens.
@@ -201,12 +201,12 @@ contract StrategyStella is StratManager, FeeManager {
         return xStellaToStella(balanceOfXWantInPool());
     }
 
-    // Calc Stella to xStella Rate 
+    // Calc Stella to xStella Rate
     function stellaToXStella (uint256 _amount) public view returns (uint256) {
         return _amount.mul(IxWant(xWant).totalSupply()).div(IERC20(want).balanceOf(xWant));
     }
 
-     // Calc Stella to xStella Rate 
+     // Calc Stella to xStella Rate
     function xStellaToStella (uint256 _amount) public view returns (uint256) {
         return _amount.mul(IERC20(want).balanceOf(xWant)).div(IxWant(xWant).totalSupply());
     }
@@ -320,7 +320,7 @@ contract StrategyStella is StratManager, FeeManager {
     function removeLastRewardRoute() external onlyManager {
         address reward = rewardToOutputRoute[rewardToOutputRoute.length - 1][0];
         IERC20(reward).safeApprove(unirouter, 0);
-    
+
         rewardToOutputRoute.pop();
     }
 
@@ -331,6 +331,6 @@ contract StrategyStella is StratManager, FeeManager {
     function rewardToOutput(uint256 _i) external view returns (address[] memory) {
         return rewardToOutputRoute[_i];
     }
-     
+
     receive () external payable {}
 }

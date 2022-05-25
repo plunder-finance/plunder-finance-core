@@ -27,7 +27,7 @@ contract StrategyBifiMaxiV2 is StratManager {
 
     // Routes
     address[] public outputToWantRoute;
-   
+
     bool public harvestOnDeposit = true;
     uint256 public lastHarvest;
 
@@ -47,9 +47,9 @@ contract StrategyBifiMaxiV2 is StratManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToWantRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         rewardPool = _rewardPool;
 
         output = _outputToWantRoute[0];

@@ -16,7 +16,7 @@ import "../Common/StratManager.sol";
 import "../Common/FeeManager.sol";
 
 
-//Lending Strategy 
+//Lending Strategy
 contract StrategyScream is StratManager, FeeManager {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
@@ -81,8 +81,8 @@ contract StrategyScream is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         borrowRate = _borrowRate;
         borrowRateMax = _borrowRateMax;
         borrowDepth = _borrowDepth;
@@ -264,8 +264,8 @@ contract StrategyScream is StratManager, FeeManager {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);

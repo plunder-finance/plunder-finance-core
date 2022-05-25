@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/utils/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
-import "../interfaces/beefy/IVault.sol";
+import "../interfaces/plunder/IVault.sol";
 
 contract BeefyRegistry {
   using Address for address;
@@ -17,7 +17,7 @@ contract BeefyRegistry {
   event ProposedGovernance(address governance);
   event SwitchedGovernance(address oldGovernance, address newGovernance);
 
-  address public governance;  
+  address public governance;
   address public pendingGovernance;
 
   EnumerableSet.AddressSet private vaults;
@@ -41,7 +41,7 @@ contract BeefyRegistry {
     vaults.add(_vault);
     emit VaultAdded(_vault);
   }
-  
+
   function getVaultData(address _vault) internal view returns (
     address want,
     address strategy
@@ -86,7 +86,7 @@ contract BeefyRegistry {
   ) {
     wantArray = new address[](vaults.length());
     strategyArray = new address[](vaults.length());
-    
+
     for (uint i = 0; i < vaults.length(); i++) {
       (address _want, address _strategy) = getVaultData(vaults.at(i));
       wantArray[i] = _want;
@@ -99,7 +99,7 @@ contract BeefyRegistry {
     pendingGovernance = _pendingGovernance;
     emit ProposedGovernance(_pendingGovernance);
   }
-  
+
   function acceptGovernance() external onlyPendingGovernance {
     emit SwitchedGovernance(governance, msg.sender);
     governance = pendingGovernance;
@@ -109,7 +109,7 @@ contract BeefyRegistry {
     require(msg.sender == governance, "!gov");
     _;
   }
-  
+
   modifier onlyPendingGovernance {
     require(msg.sender == pendingGovernance, "!pending");
     _;

@@ -35,7 +35,7 @@ contract StrategyDFYNDualFarmRewardPoolLP is StratManager, FeeManager {
     uint256 public lastHarvest;
 
     // Routes
-    address[] public outputToNativeRoute; // since DFYN uses its own native, convert to common token, then convert that token to native beefy uses
+    address[] public outputToNativeRoute; // since DFYN uses its own native, convert to common token, then convert that token to native plunder uses
     address[] public outputToLp0Route;
     address[] public outputToLp1Route;
     address[] public secondOutputToOutputRoute;
@@ -52,15 +52,15 @@ contract StrategyDFYNDualFarmRewardPoolLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route,
         address[] memory _secondOutputToOutputRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         rewardPool = _rewardPool;
-       
+
         output = _outputToNativeRoute[0];
         native = _outputToNativeRoute[_outputToNativeRoute.length - 1];
         outputToNativeRoute = _outputToNativeRoute;
@@ -156,8 +156,8 @@ contract StrategyDFYNDualFarmRewardPoolLP is StratManager, FeeManager {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(wmatic).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(wmatic).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(wmatic).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(wmatic).safeTransfer(strategist, strategistFee);

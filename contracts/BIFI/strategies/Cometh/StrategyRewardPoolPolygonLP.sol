@@ -44,8 +44,8 @@ contract StrategyRewardPoolPolygonLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         lpToken0 = IUniswapV2Pair(want).token0();
         lpToken1 = IUniswapV2Pair(want).token1();
@@ -121,8 +121,8 @@ contract StrategyRewardPoolPolygonLP is StratManager, FeeManager {
         uint256 callFeeAmount = maticBal.mul(callFee).div(MAX_FEE);
         IERC20(matic).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = maticBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(matic).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = maticBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(matic).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = maticBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(matic).safeTransfer(strategist, strategistFee);

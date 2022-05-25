@@ -44,8 +44,8 @@ contract StrategyYieldLP is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         lpToken0 = IUniswapV2Pair(want).token0();
         lpToken1 = IUniswapV2Pair(want).token1();
@@ -89,7 +89,7 @@ contract StrategyYieldLP is StratManager, FeeManager, GasThrottler {
             wantBal = _amount;
         }
 
-  
+
         IERC20(want).safeTransfer(vault, wantBal);
     }
 
@@ -113,8 +113,8 @@ contract StrategyYieldLP is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = wbnbBal.mul(callFee).div(MAX_FEE);
         IERC20(wbnb).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = wbnbBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(wbnb).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = wbnbBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(wbnb).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = wbnbBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(wbnb).safeTransfer(strategist, strategistFee);

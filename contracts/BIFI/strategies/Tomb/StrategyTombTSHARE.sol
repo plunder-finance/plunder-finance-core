@@ -49,10 +49,10 @@ contract StrategyTombTSHARE is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToWantRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         masonry = _masonry;
 
@@ -105,7 +105,7 @@ contract StrategyTombTSHARE is StratManager, FeeManager {
     }
 
     // checks to ensure that the correct time has elapsed and withdrawals are possible
-    function checkEpoch() internal returns (bool locking) {        
+    function checkEpoch() internal returns (bool locking) {
         if (masonry.canWithdraw(address(this)) && locked) {
             startUnlockWindow();
             locking = false;
@@ -142,7 +142,7 @@ contract StrategyTombTSHARE is StratManager, FeeManager {
             uint256[] memory swapAmounts = swapRewards();
             uint256 wantHarvested = swapAmounts[1];
             deposit();
-            
+
             lastHarvest = block.timestamp;
             emit StratHarvest(msg.sender, wantHarvested, balanceOf());
         }
@@ -158,8 +158,8 @@ contract StrategyTombTSHARE is StratManager, FeeManager {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -222,7 +222,7 @@ contract StrategyTombTSHARE is StratManager, FeeManager {
         uint256 nativeOut;
         if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

@@ -28,7 +28,7 @@ contract StrategySolaceRewardPool is  StratManager, FeeManager, GasThrottler, IE
     ISolaceRewards public rewardPool;
     IxLocker public xLocker;
 
-    // Our locker ID 
+    // Our locker ID
     uint256 public lockerID;
 
     // Harvest data
@@ -45,7 +45,7 @@ contract StrategySolaceRewardPool is  StratManager, FeeManager, GasThrottler, IE
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
 
     constructor(
@@ -56,9 +56,9 @@ contract StrategySolaceRewardPool is  StratManager, FeeManager, GasThrottler, IE
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         rewardPool = ISolaceRewards(_rewardPool);
         xLocker = IxLocker(_xLocker);
@@ -161,13 +161,13 @@ contract StrategySolaceRewardPool is  StratManager, FeeManager, GasThrottler, IE
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
         chargedFees = true;
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFee);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFee);
 
     }
 
@@ -197,7 +197,7 @@ contract StrategySolaceRewardPool is  StratManager, FeeManager, GasThrottler, IE
         uint256 nativeOut;
         if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

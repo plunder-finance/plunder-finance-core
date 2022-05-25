@@ -35,8 +35,8 @@ contract StrategyCakeV2 is StratManagerCake, FeeManagerCake {
         address _vault,
         address _unirouter,
         address _keeper,
-        address _beefyFeeRecipient
-    ) StratManagerCake(_keeper, _unirouter, _vault, _beefyFeeRecipient) public {
+        address _plunderFeeRecipient
+    ) StratManagerCake(_keeper, _unirouter, _vault, _plunderFeeRecipient) public {
         _giveAllowances();
     }
 
@@ -97,8 +97,8 @@ contract StrategyCakeV2 is StratManagerCake, FeeManagerCake {
         uint256 callFeeAmount = wrappedBal.mul(callFee).div(MAX_FEE);
         IERC20(wrapped).safeTransfer(tx.origin, callFeeAmount);
 
-        uint256 beefyFeeAmount = wrappedBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(wrapped).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = wrappedBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(wrapped).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
     }
 
     // calculate the total underlaying 'want' held by the strat.

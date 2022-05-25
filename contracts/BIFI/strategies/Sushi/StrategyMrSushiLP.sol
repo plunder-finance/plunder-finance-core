@@ -55,11 +55,11 @@ contract StrategyMrSushiLP is StratManager, FeeManager {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToSushiNativeRoute,
         address[] memory _sushiNativeToLp0Route,
         address[] memory _sushiNativeToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -153,7 +153,7 @@ contract StrategyMrSushiLP is StratManager, FeeManager {
 
     // performance fees
     function chargeFees(address callFeeRecipient) internal {
-        // rewards are in sushi and sushiNative, convert all to sushiNative 
+        // rewards are in sushi and sushiNative, convert all to sushiNative
         uint256 toSushiNative = IERC20(output).balanceOf(address(this));
         if (toSushiNative > 0) {
             IUniswapRouterETH(unirouter).swapExactTokensForTokens(toSushiNative, 0, outputToSushiNativeRoute, address(this), block.timestamp);
@@ -169,8 +169,8 @@ contract StrategyMrSushiLP is StratManager, FeeManager {
         uint256 callFeeAmount = solarNativeBal.mul(callFee).div(MAX_FEE);
         IERC20(solarNative).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = solarNativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(solarNative).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = solarNativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(solarNative).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = solarNativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(solarNative).safeTransfer(strategist, strategistFee);
@@ -230,7 +230,7 @@ contract StrategyMrSushiLP is StratManager, FeeManager {
         uint256 nativeOut;
          if (outputBal > 0) {
             try IUniswapRouterETH(unirouter).getAmountsOut(outputBal, outputToSushiNativeRoute)
-                returns (uint256[] memory amountOut) 
+                returns (uint256[] memory amountOut)
             {
                 nativeOut = amountOut[amountOut.length -1];
             }

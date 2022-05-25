@@ -16,7 +16,7 @@ contract StrategyCommonChefReferrerLPBsc is StrategyCommonChefReferrerLP, GasThr
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
@@ -29,7 +29,7 @@ contract StrategyCommonChefReferrerLPBsc is StrategyCommonChefReferrerLP, GasThr
         _unirouter,
         _keeper,
         _strategist,
-        _beefyFeeRecipient,
+        _plunderFeeRecipient,
         _outputToNativeRoute,
         _outputToLp0Route,
         _outputToLp1Route

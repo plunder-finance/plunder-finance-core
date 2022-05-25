@@ -2,7 +2,7 @@
 
 pragma solidity ^0.6.12;
 
-import "../interfaces/beefy/IVault.sol";
+import "../interfaces/plunder/IVault.sol";
 
 contract BeefyStrategyMulticall {
 

@@ -43,7 +43,7 @@ contract StrategyCommonAuroraChefLP is StratManager, FeeManager, GasThrottler {
     event StratHarvest(address indexed harvester, uint256 wantHarvested, uint256 tvl);
     event Deposit(uint256 tvl);
     event Withdraw(uint256 tvl);
-    event ChargedFees(uint256 callFees, uint256 beefyFees, uint256 strategistFees);
+    event ChargedFees(uint256 callFees, uint256 plunderFees, uint256 strategistFees);
 
     constructor(
         address _want,
@@ -53,11 +53,11 @@ contract StrategyCommonAuroraChefLP is StratManager, FeeManager, GasThrottler {
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         poolId = _poolId;
         chef = _chef;
@@ -88,7 +88,7 @@ contract StrategyCommonAuroraChefLP is StratManager, FeeManager, GasThrottler {
             IMasterChef(chef).deposit(poolId, wantBal);
             emit Deposit(balanceOf());
         }
-    } 
+    }
 
     function withdraw(uint256 _amount) external {
         require(msg.sender == vault, "!vault");
@@ -159,8 +159,8 @@ contract StrategyCommonAuroraChefLP is StratManager, FeeManager, GasThrottler {
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);
@@ -169,7 +169,7 @@ contract StrategyCommonAuroraChefLP is StratManager, FeeManager, GasThrottler {
         bool tradeLP0 = lpToken0 != output ? canTrade(liquidityBal.div(2), outputToLp0Route): true;
         bool tradeLP1 = lpToken1 != output ? canTrade(liquidityBal.div(2), outputToLp1Route): true;
         require(tradeLP0 == true && tradeLP1 == true, "Not enough output");
-        emit ChargedFees(callFeeAmount, beefyFeeAmount, strategistFee);
+        emit ChargedFees(callFeeAmount, plunderFeeAmount, strategistFee);
     }
 
     function swap() internal  {
@@ -217,13 +217,13 @@ contract StrategyCommonAuroraChefLP is StratManager, FeeManager, GasThrottler {
     function rewardsAvailable() public view returns (uint256) {
         string memory signature = StringUtils.concat(pendingRewardsFunctionName, "(uint256,address)");
         bytes memory result = Address.functionStaticCall(
-            chef, 
+            chef,
             abi.encodeWithSignature(
                 signature,
                 poolId,
                 address(this)
             )
-        );  
+        );
         return abi.decode(result, (uint256));
     }
 

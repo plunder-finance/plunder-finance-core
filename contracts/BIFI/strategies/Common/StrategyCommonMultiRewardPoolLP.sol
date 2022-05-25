@@ -48,12 +48,12 @@ contract StrategyCommonMultiRewardPoolLP is StratManager, FeeManager, GasThrottl
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient,
+        address _plunderFeeRecipient,
         address[] memory _outputToNativeRoute,
         address[] memory _secondOutputToOutputRoute,
         address[] memory _outputToLp0Route,
         address[] memory _outputToLp1Route
-    ) StratManager(_keeper, _strategist, _unirouter, _vault, _beefyFeeRecipient) public {
+    ) StratManager(_keeper, _strategist, _unirouter, _vault, _plunderFeeRecipient) public {
         want = _want;
         rewardPool = _rewardPool;
 
@@ -64,7 +64,7 @@ contract StrategyCommonMultiRewardPoolLP is StratManager, FeeManager, GasThrottl
         secondOutput = _secondOutputToOutputRoute[0];
         require(_secondOutputToOutputRoute[_secondOutputToOutputRoute.length - 1] == output, "secondOutputToOutputRoute[last] != output");
         secondOutputToOutputRoute = _secondOutputToOutputRoute;
-        
+
         // setup lp routing
         lpToken0 = IUniswapV2Pair(want).token0();
         require(_outputToLp0Route[0] == output, "outputToLp0Route[0] != output");
@@ -154,7 +154,7 @@ contract StrategyCommonMultiRewardPoolLP is StratManager, FeeManager, GasThrottl
         if (toOutput > 0) {
             IUniswapRouterETH(unirouter).swapExactTokensForTokens(toOutput, 0, secondOutputToOutputRoute, address(this), now);
         }
-        
+
         uint256 toNative = IERC20(output).balanceOf(address(this)).mul(45).div(1000);
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(toNative, 0, outputToNativeRoute, address(this), now);
 
@@ -163,8 +163,8 @@ contract StrategyCommonMultiRewardPoolLP is StratManager, FeeManager, GasThrottl
         uint256 callFeeAmount = nativeBal.mul(callFee).div(MAX_FEE);
         IERC20(native).safeTransfer(callFeeRecipient, callFeeAmount);
 
-        uint256 beefyFeeAmount = nativeBal.mul(beefyFee).div(MAX_FEE);
-        IERC20(native).safeTransfer(beefyFeeRecipient, beefyFeeAmount);
+        uint256 plunderFeeAmount = nativeBal.mul(plunderFee).div(MAX_FEE);
+        IERC20(native).safeTransfer(plunderFeeRecipient, plunderFeeAmount);
 
         uint256 strategistFee = nativeBal.mul(STRATEGIST_FEE).div(MAX_FEE);
         IERC20(native).safeTransfer(strategist, strategistFee);

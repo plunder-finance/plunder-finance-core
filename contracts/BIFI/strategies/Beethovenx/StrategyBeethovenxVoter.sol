@@ -17,7 +17,7 @@ contract StrategyBeethovenxVoter is StrategyBeethovenxfBeets, DelegateManagerCom
         address _unirouter,
         address _keeper,
         address _strategist,
-        address _beefyFeeRecipient
+        address _plunderFeeRecipient
     ) StrategyBeethovenxfBeets(
         _balancerPoolIds,
         _chefPoolId,
@@ -27,7 +27,7 @@ contract StrategyBeethovenxVoter is StrategyBeethovenxfBeets, DelegateManagerCom
         _unirouter,
         _keeper,
         _strategist,
-        _beefyFeeRecipient
+        _plunderFeeRecipient
     ) DelegateManagerCommon(
         bytes32(0x62656574732e6574680000000000000000000000000000000000000000000000),
         address(0x5e1caC103F943Cd84A1E92dAde4145664ebf692A)
