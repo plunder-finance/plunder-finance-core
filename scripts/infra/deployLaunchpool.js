@@ -11,7 +11,7 @@ const pool = {
 async function main() {
   await hardhat.run("compile");
 
-  const Launchpad = await ethers.getContractFactory("BeefyLaunchpool");
+  const Launchpad = await ethers.getContractFactory("PlunderLaunchpool");
 
   console.log("Deploying...");
 

@@ -3,7 +3,7 @@ const { addressBook } = require("blockchain-addressbook");
 const ethers = hardhat.ethers;
 
 const {
-    platforms: { beefyfinance },
+    platforms: { plunderfinance },
   } = addressBook.bsc;
 
 const ensID = ethers.utils.formatBytes32String('cake.eth');
@@ -14,7 +14,7 @@ const config = {
   batch: '0xB47aff175ac9dbc11aCf628F8F3d0B483F3D3194',
   share: 500,
   id: ensID,
-  keeper: beefyfinance.keeper,
+  keeper: plunderfinance.keeper,
   name: 'beCAKE',
   symbol: 'beCAKE',
   contractName: 'VeCakeStaker'
@@ -31,7 +31,7 @@ async function main() {
 
   const BeToken = await ethers.getContractFactory(contractNames.beTokenContract);
 
-  console.log(`deploying Beefy ${config.symbol}`);
+  console.log(`deploying Plunder ${config.symbol}`);
 
   const lockerArguments = [
     config.stakingContract,

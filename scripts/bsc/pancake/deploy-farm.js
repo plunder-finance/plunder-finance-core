@@ -8,7 +8,7 @@ const registerSubsidy = require("../../../utils/registerSubsidy");
 const predictAddresses = require("../../../utils/predictAddresses");
 const getNetworkRpc = require("../../../utils/getNetworkRpc");
 const { addressBook } = require("blockchain-addressbook")
-const { pancake, beefyfinance } = addressBook.bsc.platforms;
+const { pancake, plunderfinance } = addressBook.bsc.platforms;
 const { CAKE, WBNB, BUSD, USDT } = addressBook.bsc.tokens;
 const baseTokenAddresses = [CAKE, WBNB, BUSD, USDT].map(t => t.address);
 
@@ -74,16 +74,16 @@ async function main() {
     chef: pancake.masterchef,
     vault: predictedAddresses.vault,
     unirouter: pancake.router, // Pancakeswap Router V2
-    keeper: beefyfinance.keeper,
+    keeper: plunderfinance.keeper,
     strategist: deployer.address, // your address for rewards
-    beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
+    plunderFeeRecipient: plunderfinance.plunderFeeRecipient,
     outputToNativeRoute: [CAKE.address, WBNB.address],
     outputToLp0Route: resolveSwapRoute(CAKE.address, baseTokenAddresses, lpPair.token1, lpPair.token0),
     outputToLp1Route: resolveSwapRoute(CAKE.address, baseTokenAddresses, lpPair.token0, lpPair.token1),
   };
 
   const contractNames = {
-    vault: "BeefyVaultV6",
+    vault: "PlunderVaultV6",
     strategy: "StrategyCommonChefLPBsc",
   }
 
@@ -109,7 +109,7 @@ async function main() {
 
   console.log("Vault deployed to:", vault.address);
   console.log("Strategy deployed to:", strategy.address);
-  console.log("Beefy App object:", {
+  console.log("Plunder App object:", {
     id: `cakev2-${mooPairName.toLowerCase()}`,
     name: `${mooPairName} LP`,
     token: `${mooPairName} LP2`,

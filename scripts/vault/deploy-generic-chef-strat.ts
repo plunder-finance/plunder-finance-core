@@ -4,12 +4,12 @@ import { predictAddresses } from "../../utils/predictAddresses";
 import { setCorrectCallFee } from "../../utils/setCorrectCallFee";
 import { setPendingRewardsFunctionName } from "../../utils/setPendingRewardsFunctionName";
 import { verifyContract } from "../../utils/verifyContract";
-import { BeefyChain } from "../../utils/beefyChain";
+import { PlunderChain } from "../../utils/plunderChain";
 
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  platforms: {  pancake, beefyfinance },
+  platforms: {  pancake, plunderfinance },
   tokens: {
     BNB: { address: BNB },
     CAKE: { address: CAKE },
@@ -39,8 +39,8 @@ const strategyParams = {
   chef: "0xa5f8C5Dbd5F286960b9d90548680aE5ebFf07652", //pancake.masterchef,
   unirouter: pancake.router,
   strategist: "0x4cC72219fc8aEF162FC0c255D9B9C3Ff93B10882", // some address
-  keeper: beefyfinance.keeper,
-  beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
+  keeper: plunderfinance.keeper,
+  plunderFeeRecipient: plunderfinance.plunderFeeRecipient,
   outputToNativeRoute: [CAKE, BNB],
   outputToLp0Route: [CAKE],
   outputToLp1Route: [CAKE, BNB],
@@ -49,7 +49,7 @@ const strategyParams = {
 };
 
 const contractNames = {
-  vault: "BeefyVaultV6",
+  vault: "PlunderVaultV6",
   strategy: "StrategyCommonChefLPVoter",
 };
 
@@ -91,7 +91,7 @@ async function main() {
     strategyParams.unirouter,
     strategyParams.keeper,
     strategyParams.strategist,
-    strategyParams.beefyFeeRecipient,
+    strategyParams.plunderFeeRecipient,
     strategyParams.outputToNativeRoute,
     strategyParams.outputToLp0Route,
     strategyParams.outputToLp1Route,
@@ -119,9 +119,9 @@ async function main() {
     );
   }
  // await setPendingRewardsFunctionName(strategy, strategyParams.pendingRewardsFunctionName);
-  await setCorrectCallFee(strategy, hardhat.network.name as BeefyChain);
-  console.log(`Transfering Vault Owner to ${beefyfinance.vaultOwner}`)
-  await vault.transferOwnership(beefyfinance.vaultOwner);
+  await setCorrectCallFee(strategy, hardhat.network.name as PlunderChain);
+  console.log(`Transfering Vault Owner to ${plunderfinance.vaultOwner}`)
+  await vault.transferOwnership(plunderfinance.vaultOwner);
   console.log();
 
   await Promise.all(verifyContractsPromises);

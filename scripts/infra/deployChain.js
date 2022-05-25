@@ -3,14 +3,14 @@ const { addressBook } = require("blockchain-addressbook");
 const { getImplementationAddress } = require("@openzeppelin/upgrades-core");
 
 /**
- * Script used to deploy the basic infrastructure needed to run Beefy.
+ * Script used to deploy the basic infrastructure needed to run Plunder.
  */
 
 const ethers = hardhat.ethers;
 
 const {
   platforms: { 
-    beefyfinance: {
+    plunderfinance: {
       treasury,
       devMultisig,
       keeper,
@@ -85,7 +85,7 @@ async function main() {
   console.log("Checking if should deploy treasury...");
   if (!config.treasury) {
     console.log("Deploying treasury.");
-    const Treasury = await ethers.getContractFactory("BeefyTreasury");
+    const Treasury = await ethers.getContractFactory("PlunderTreasury");
     const treasury = await Treasury.deploy();
     await treasury.deployed();
     await treasury.transferOwnership(treasurer);
@@ -105,15 +105,15 @@ async function main() {
     console.log(`There is already a multicall contract deployed at ${config.multicall}. Skipping.`);
   }
 
-  console.log("Checking if it should deploy a Beefy reward pool...");
+  console.log("Checking if it should deploy a Plunder reward pool...");
   if (!config.rewardPool && config.wnative && config.bifi) {
     console.log("Deploying reward pool.");
-    const RewardPool = await ethers.getContractFactory("BeefyRewardPool");
+    const RewardPool = await ethers.getContractFactory("PlunderRewardPool");
     const rewardPool = await RewardPool.deploy(config.bifi, config.wnative);
     await rewardPool.deployed();
     console.log(`Reward pool deployed to ${rewardPool.address}`);
   } else {
-    console.log("Skipping the beefy reward pool for now.");
+    console.log("Skipping the plunder reward pool for now.");
   }
 
   console.log("Checking if it should deploy a fee batcher...");
@@ -123,8 +123,8 @@ async function main() {
     const unirouterAddress = config.unirouterHasBifiLiquidity ? config.unirouter : ethers.constants.AddressZero;
 
     // How do we do a fee batcher without a reward pool?
-    const BeefyFeeBatch = await ethers.getContractFactory("BeefyFeeBatchV2");
-    const batcher = await upgrades.deployProxy(BeefyFeeBatch, [
+    const PlunderFeeBatch = await ethers.getContractFactory("PlunderFeeBatchV2");
+    const batcher = await upgrades.deployProxy(PlunderFeeBatch, [
       config.bifi,
       config.wnative,
       config.treasury,
@@ -150,4 +150,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-  

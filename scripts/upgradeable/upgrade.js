@@ -5,7 +5,7 @@ const { addressBook } = require("blockchain-addressbook");
 const { ethers, upgrades } = hardhat;
 
 const chain = "avax";
-const a = addressBook[chain].platforms.beefyfinance.beefyFeeRecipient;
+const a = addressBook[chain].platforms.plunderfinance.plunderFeeRecipient;
 
 const config = {
   impl: "VeJoeStaker",

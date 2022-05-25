@@ -3,7 +3,7 @@ import { verifyContract } from "../../utils/verifyContract";
 
 import { addressBook } from "blockchain-addressbook";
 import { BigNumber, ContractFactory } from "ethers";
-import { BeefyHarvester, UpkeepRefunder } from "../../typechain-types";
+import { PlunderHarvester, UpkeepRefunder } from "../../typechain-types";
 
 const chainName = "polygon";
 const chainData = addressBook[chainName];
@@ -22,9 +22,9 @@ const keeperRegistry = "0x7b3EC232b08BD7b4b3305BE0C044D907B2DF960B";
 
 const config = {
   harvester: {
-    contractName: "BeefyHarvester",
+    contractName: "PlunderHarvester",
     args: {
-      vaultRegistry: chainData.platforms.beefyfinance.vaultRegistry,
+      vaultRegistry: chainData.platforms.plunderfinance.vaultRegistry,
       keeperRegistry,
       performUpkeepGasLimit: 2500000,
       performUpkeepGasLimitBuffer: 100000,
@@ -98,7 +98,7 @@ const deployUpkeepRefunder = async (): Promise<{ upkeepAddress: string }> => {
 };
 
 const deployHarvester = async (upkeepAddress: string) => {
-  const BeefyHarvesterFactory = await ethers.getContractFactory(config.harvester.contractName);
+  const PlunderHarvesterFactory = await ethers.getContractFactory(config.harvester.contractName);
 
   const {
     vaultRegistry,
@@ -122,7 +122,7 @@ const deployHarvester = async (upkeepAddress: string) => {
   const contractInfo = await deployContract(
     config.harvester.contractName,
     isProxy,
-    BeefyHarvesterFactory,
+    PlunderHarvesterFactory,
     harvesterConstructorArguments
   );
 
@@ -140,7 +140,7 @@ const deployHarvester = async (upkeepAddress: string) => {
   const autoHarvester = (await ethers.getContractAt(
     config.harvester.contractName,
     contractInfo.contract
-  )) as unknown as BeefyHarvester;
+  )) as unknown as PlunderHarvester;
 
   const chainlinkUpkeeper: string = "0x7b3EC232b08BD7b4b3305BE0C044D907B2DF960B"; // TODO: move this to address book
   await autoHarvester.setUpkeepers([chainlinkUpkeeper], true);

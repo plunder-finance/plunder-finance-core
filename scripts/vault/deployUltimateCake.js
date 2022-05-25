@@ -20,7 +20,7 @@ async function main() {
   await hardhat.run("compile");
 
   const simpleCakeWorker = await deployVault({
-    vault: "BeefyVaultV5",
+    vault: "PlunderVaultV5",
     strategy: "StrategyCakeWorker",
     want: config.want,
     mooName: "Moo Cake Worker",
@@ -32,7 +32,7 @@ async function main() {
   });
 
   const bunnyDelegator = await deployVault({
-    vault: "BeefyVaultV5",
+    vault: "PlunderVaultV5",
     strategy: "StrategyBunnyCakeWorker",
     want: config.want,
     mooName: "Moo Cake Worker",
@@ -44,7 +44,7 @@ async function main() {
   });
 
   const bunnyCompounder = await deployVault({
-    vault: "BeefyVaultV5",
+    vault: "PlunderVaultV5",
     strategy: "StrategyBunnyCakeWorker",
     want: config.want,
     mooName: "Moo Cake Worker",
@@ -56,7 +56,7 @@ async function main() {
   });
 
   const yieldBalancer = await deployVault({
-    vault: "BeefyVaultV5",
+    vault: "PlunderVaultV5",
     strategy: "YieldBalancer",
     want: config.want,
     mooName: "Ultimate Cake",
@@ -72,7 +72,7 @@ async function main() {
     rpc: RPC,
   });
 
-  const Vault = await ethers.getContractFactory("BeefyVaultV5");
+  const Vault = await ethers.getContractFactory("PlunderVaultV5");
   const Strategy = await ethers.getContractFactory("StrategyBunnyCake");
 
   const [deployer] = await ethers.getSigners();

@@ -3,10 +3,10 @@ import { addressBook } from "blockchain-addressbook";
 import { predictAddresses } from "../../utils/predictAddresses";
 import { setCorrectCallFee } from "../../utils/setCorrectCallFee";
 import { verifyContract } from "../../utils/verifyContract";
-import { BeefyChain } from "../../utils/beefyChain";
+import { PlunderChain } from "../../utils/plunderChain";
 
 const {
-  platforms: { pancake, beefyfinance },
+  platforms: { pancake, plunderfinance },
   tokens: {
     VALAS: { address: VALAS },
     BUSD: { address: BUSD },
@@ -32,15 +32,15 @@ const strategyParams = {
   outputToNativeRoute: [VALAS, BNB],
   outputToWantRoute: [VALAS, BNB, BUSD, DAI],
   unirouter: pancake.router,
-  keeper: beefyfinance.keeper,
+  keeper: plunderfinance.keeper,
   strategist: "0xb2e4A61D99cA58fB8aaC58Bb2F8A59d63f552fC0",
-  beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
+  plunderFeeRecipient: plunderfinance.plunderFeeRecipient,
 };
 
 const borrowConfig = [strategyParams.borrowRate, strategyParams.borrowRateMax, strategyParams.borrowDepth, strategyParams.minLeverage ]
 
 const contractNames = {
-  vault: "BeefyVaultV6",
+  vault: "PlunderVaultV6",
   strategy: "StrategyValas",
 };
 
@@ -81,7 +81,7 @@ async function main() {
     strategyParams.unirouter,
     strategyParams.keeper,
     strategyParams.strategist,
-    strategyParams.beefyFeeRecipient,
+    strategyParams.plunderFeeRecipient,
     strategyParams.outputToNativeRoute,
     strategyParams.outputToWantRoute,
   ];
@@ -105,11 +105,11 @@ async function main() {
       verifyContract(strategy.address, strategyConstructorArguments)
     );
   }
-  await setCorrectCallFee(strategy, hardhat.network.name as BeefyChain);
+  await setCorrectCallFee(strategy, hardhat.network.name as PlunderChain);
   console.log();
 
-  console.log(`Transfering Vault Owner to ${beefyfinance.vaultOwner}`)
-  await vault.transferOwnership(beefyfinance.vaultOwner);
+  console.log(`Transfering Vault Owner to ${plunderfinance.vaultOwner}`)
+  await vault.transferOwnership(plunderfinance.vaultOwner);
   console.log();
 
   await Promise.all(verifyContractsPromises);

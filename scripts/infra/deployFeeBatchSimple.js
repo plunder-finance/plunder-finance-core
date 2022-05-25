@@ -11,8 +11,8 @@ const config = {
 async function main() {
   await hardhat.run("compile");
 
-  const BeefyFeeBatchSimple = await ethers.getContractFactory("BeefyFeeBatchSimple");
-  const batcher = await BeefyFeeBatchSimple.deploy(config.treasury, config.rewardPool, config.wNative);
+  const PlunderFeeBatchSimple = await ethers.getContractFactory("PlunderFeeBatchSimple");
+  const batcher = await PlunderFeeBatchSimple.deploy(config.treasury, config.rewardPool, config.wNative);
   await batcher.deployed();
 
   console.log("Deployed to:", batcher.address);

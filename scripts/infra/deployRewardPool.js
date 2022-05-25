@@ -10,7 +10,7 @@ const config = {
 async function main() {
   await hardhat.run("compile");
 
-  const Pool = await ethers.getContractFactory("BeefyRewardPool");
+  const Pool = await ethers.getContractFactory("PlunderRewardPool");
   const pool = await Pool.deploy(config.staked, config.rewards);
   await pool.deployed();
 

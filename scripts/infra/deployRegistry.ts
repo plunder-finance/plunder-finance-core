@@ -4,32 +4,32 @@ import { verifyContract } from "../../utils/verifyContract";
 const shouldVerifyOnEtherscan = true;
 
 const contractNames = {
-  BeefyVaultRegistry: "BeefyVaultRegistry",
+  PlunderVaultRegistry: "PlunderVaultRegistry",
 };
 
 const implementationConstructorArguments: any[] = []; // proxy implementations cannot have constructors
 
 const deploy = async () => {
-  const BeefyVaultRegistryFactory = await ethers.getContractFactory(contractNames.BeefyVaultRegistry)
+  const PlunderVaultRegistryFactory = await ethers.getContractFactory(contractNames.PlunderVaultRegistry)
 
-  console.log("Deploying:", contractNames.BeefyVaultRegistry);
+  console.log("Deploying:", contractNames.PlunderVaultRegistry);
 
   const constructorArguments: any[] = [];
-  const transparentUpgradableProxy = await upgrades.deployProxy(BeefyVaultRegistryFactory, constructorArguments);
+  const transparentUpgradableProxy = await upgrades.deployProxy(PlunderVaultRegistryFactory, constructorArguments);
   await transparentUpgradableProxy.deployed();
 
   const implementationAddress = await upgrades.erc1967.getImplementationAddress(transparentUpgradableProxy.address);
 
   console.log();
   console.log("TransparentUpgradableProxy:", transparentUpgradableProxy.address);
-  console.log(`Implementation address (${contractNames.BeefyVaultRegistry}):`, implementationAddress);
+  console.log(`Implementation address (${contractNames.PlunderVaultRegistry}):`, implementationAddress);
 
   console.log();
   console.log("Running post deployment");
 
   const verifyContractsPromises: Promise<any>[] = [];
   if (shouldVerifyOnEtherscan) {
-    console.log(`Verifying ${contractNames.BeefyVaultRegistry}`);
+    console.log(`Verifying ${contractNames.PlunderVaultRegistry}`);
     verifyContractsPromises.push(verifyContract(implementationAddress, implementationConstructorArguments));
   }
   console.log();

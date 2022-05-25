@@ -1,7 +1,7 @@
 const hardhat = require("hardhat");
 import { addressBook } from "blockchain-addressbook";
 const {
-    platforms: { pancake, beefyfinance },
+    platforms: { pancake, plunderfinance },
     tokens: {
       BNB: { address: BNB },
       CAKE: { address: CAKE },
@@ -14,7 +14,7 @@ const ethers = hardhat.ethers;
 async function main() {
     await hardhat.run("compile");
 
-    const RewardPool = await ethers.getContractFactory("BeefyRewardPool");
+    const RewardPool = await ethers.getContractFactory("PlunderRewardPool");
 
     const Batch = await ethers.getContractFactory("BeTokenBatch");
 
@@ -23,7 +23,7 @@ async function main() {
         stakedToken: beToken,
         rewardToken: CAKE,
         unirouter: pancake.router,
-        feeBatch: beefyfinance.beefyFeeRecipient,
+        feeBatch: plunderfinance.plunderFeeRecipient,
         route: [CAKE, BNB],
     };
 

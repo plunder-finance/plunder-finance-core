@@ -3,12 +3,12 @@ import { addressBook } from "blockchain-addressbook";
 import { predictAddresses } from "../../utils/predictAddresses";
 import { setCorrectCallFee } from "../../utils/setCorrectCallFee";
 import { verifyContract } from "../../utils/verifyContract";
-import { BeefyChain } from "../../utils/beefyChain";
+import { PlunderChain } from "../../utils/plunderChain";
 
 const registerSubsidy = require("../../utils/registerSubsidy");
 
 const {
-  platforms: { pancake, beefyfinance },
+  platforms: { pancake, plunderfinance },
   tokens: {
     CAKE: { address: CAKE },
     BNB: { address: BNB },
@@ -31,15 +31,15 @@ const strategyParams = {
   rewardPool: rewardPool,
   unirouter: pancake.router,
   strategist: "0xb2e4A61D99cA58fB8aaC58Bb2F8A59d63f552fC0", // some address
-  keeper: beefyfinance.keeper,
-  beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
+  keeper: plunderfinance.keeper,
+  plunderFeeRecipient: plunderfinance.plunderFeeRecipient,
   outputToNativeRoute: [CAKE, BNB],
  // outputToLp0Route: [WMATIC],
  // outputToLp1Route: [WMATIC, MaticX],
 };
 
 const contractNames = {
-  vault: "BeefyVaultV6",
+  vault: "PlunderVaultV6",
   strategy: "StrategybeTokenRewardPool",
 };
 
@@ -80,7 +80,7 @@ async function main() {
     strategyParams.unirouter,
     strategyParams.keeper,
     strategyParams.strategist,
-    strategyParams.beefyFeeRecipient,
+    strategyParams.plunderFeeRecipient,
     strategyParams.outputToNativeRoute,
    // strategyParams.outputToLp0Route,
    // strategyParams.outputToLp1Route,
@@ -106,9 +106,9 @@ async function main() {
       verifyContract(strategy.address, strategyConstructorArguments)
     );
   }
-  await setCorrectCallFee(strategy, hardhat.network.name as BeefyChain);
-  console.log(`Transfering Vault Owner to ${beefyfinance.vaultOwner}`)
-  await vault.transferOwnership(beefyfinance.vaultOwner);
+  await setCorrectCallFee(strategy, hardhat.network.name as PlunderChain);
+  console.log(`Transfering Vault Owner to ${plunderfinance.vaultOwner}`)
+  await vault.transferOwnership(plunderfinance.vaultOwner);
   console.log();
 
   await Promise.all(verifyContractsPromises);
@@ -125,4 +125,3 @@ main()
     console.error(error);
     process.exit(1);
   });
-  

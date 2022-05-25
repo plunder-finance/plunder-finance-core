@@ -11,8 +11,8 @@ const config = {
 async function main() {
   await hardhat.run("compile");
 
-  const BeefyRefund = await ethers.getContractFactory("BeefyRefund");
-  const refund = await BeefyRefund.deploy(config.token, config.mootoken, config.pricePerFullShare);
+  const PlunderRefund = await ethers.getContractFactory("PlunderRefund");
+  const refund = await PlunderRefund.deploy(config.token, config.mootoken, config.pricePerFullShare);
   await refund.deployed();
 
   console.log("Deployed to:", refund.address);

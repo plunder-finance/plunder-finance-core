@@ -4,7 +4,7 @@ import { verifyContract } from "../../utils/verifyContract";
 import { predictAddresses } from "../../utils/predictAddresses";
 
 const {
-    platforms: { beefyfinance },
+    platforms: { plunderfinance },
     tokens: {
       FTM: { address: FTM },
     },
@@ -17,9 +17,9 @@ const config = {
   stakingContract: '0xFC00FACE00000000000000000000000000000000',
   validatorID: 92,
   validator: '0xE97A5292248c2647466222Dc58563046b3E34b18',
-  keeper: beefyfinance.keeper,
+  keeper: plunderfinance.keeper,
   rewardPool: '0x0000000000000000000000000000000000000000',
-  name: 'Beefy Escrowed Fantom',
+  name: 'Plunder Escrowed Fantom',
   symbol: 'beFTM',
 };
 
@@ -29,12 +29,12 @@ async function main() {
   const [deployer] = await ethers.getSigners();
 
   const contractNames = {
-    beefyStakedFantom: "BeefyEscrowedFantom",
+    plunderStakedFantom: "PlunderEscrowedFantom",
   };
 
-  const BeefyStakedFantom = await ethers.getContractFactory(contractNames.beefyStakedFantom);
+  const PlunderStakedFantom = await ethers.getContractFactory(contractNames.plunderStakedFantom);
 
-  console.log('deploying Beefy Staked Fantom Contract');
+  console.log('deploying Plunder Staked Fantom Contract');
 
   const lockerArguments = [
     config.want,
@@ -47,7 +47,7 @@ async function main() {
     config.symbol,
   ];
 
-  const staker = await BeefyStakedFantom.deploy(...lockerArguments);
+  const staker = await PlunderStakedFantom.deploy(...lockerArguments);
 
   await staker.deployed();
 

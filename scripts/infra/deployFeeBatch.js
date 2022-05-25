@@ -19,9 +19,9 @@ async function main() {
   const deployer = await ethers.getSigner();
   const provider = deployer.provider;
 
-  const BeefyFeeBatch = await ethers.getContractFactory("BeefyFeeBatchV2");
+  const PlunderFeeBatch = await ethers.getContractFactory("PlunderFeeBatchV2");
 
-  const batcher = await upgrades.deployProxy(BeefyFeeBatch, [
+  const batcher = await upgrades.deployProxy(PlunderFeeBatch, [
     config.bifi,
     config.wNative,
     config.treasury,

@@ -1,6 +1,6 @@
 const hardhat = require("hardhat");
 const { addressBook } = require("blockchain-addressbook")
-const { beefyfinance, pancake } = addressBook.bsc.platforms;
+const { plunderfinance, pancake } = addressBook.bsc.platforms;
 
 const config = {
   want: "0x6Dd2993B50b365c707718b0807fC4e344c072eC2",
@@ -11,8 +11,8 @@ const config = {
   poolId: 412,
   unirouter: pancake.router, // Pancakeswap Router V2
   strategist: "0x010dA5FF62B6e45f89FA7B2d8CEd5a8b5754eC1b", // your address for rewards
-  keeper: beefyfinance.keeper,
-  beefyFeeRecipient: beefyfinance.beefyFeeRecipient,
+  keeper: plunderfinance.keeper,
+  plunderFeeRecipient: plunderfinance.plunderFeeRecipient,
   vault: "0xd93A86BbF40454A7BCD339614fB46C67bE31B908",
   strat: "0xc8DfDD41B706A6897Ff17BF99e2e94Bb661da92c",
 };
@@ -45,7 +45,7 @@ async function main() {
 //      config.unirouter,
 //      config.keeper,
 //      config.strategist,
-//      config.beefyFeeRecipient
+//      config.plunderFeeRecipient
 //    ],
 //  })
 
