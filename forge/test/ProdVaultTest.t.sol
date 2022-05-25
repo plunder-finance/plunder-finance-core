@@ -5,7 +5,7 @@ pragma solidity ^0.8.12;
 import {BaseTestHarness, console} from "./utils/BaseTestHarness.sol";
 
 // Interfaces
-import {IBeefyVaultV6} from "./interfaces/IBeefyVaultV6.sol";
+import {IPlunderVaultV6} from "./interfaces/IPlunderVaultV6.sol";
 import {IStrategyComplete} from "./interfaces/IStrategyComplete.sol";
 import {IERC20Like} from "./interfaces/IERC20Like.sol";
 
@@ -15,7 +15,7 @@ import {VaultUser} from "./users/VaultUser.sol";
 contract ProdVaultTest is BaseTestHarness {
 
     // Input your vault to test here.
-    IBeefyVaultV6 constant vault = IBeefyVaultV6(0xc4f179b4096514c48ce70b9Ad27e689A3f2C9831);
+    IPlunderVaultV6 constant vault = IPlunderVaultV6(0xc4f179b4096514c48ce70b9Ad27e689A3f2C9831);
     IStrategyComplete strategy;
 
     // Users
@@ -35,7 +35,7 @@ contract ProdVaultTest is BaseTestHarness {
     function setUp() public {
         want = IERC20Like(vault.want());
         strategy = IStrategyComplete(vault.strategy());
-        
+
         user = new VaultUser();
 
         // Slot set is for performance speed up.
@@ -51,7 +51,7 @@ contract ProdVaultTest is BaseTestHarness {
         _unpauseIfPaused();
 
         _depositIntoVault(user);
-        
+
         shift(100 seconds);
 
         console.log("Withdrawing all want from vault");
@@ -65,7 +65,7 @@ contract ProdVaultTest is BaseTestHarness {
 
     function test_harvest() external {
         _unpauseIfPaused();
-        
+
         _depositIntoVault(user);
 
         uint256 vaultBalance = vault.balance();
@@ -101,7 +101,7 @@ contract ProdVaultTest is BaseTestHarness {
 
     function test_panic() external {
         _unpauseIfPaused();
-        
+
         _depositIntoVault(user);
 
         uint256 vaultBalance = vault.balance();
@@ -109,7 +109,7 @@ contract ProdVaultTest is BaseTestHarness {
         uint256 balanceOfWant = strategy.balanceOfWant();
 
         assertGt(balanceOfPool, balanceOfWant);
-        
+
         console.log("Calling panic()");
         FORGE_VM.prank(keeper);
         strategy.panic();
@@ -125,12 +125,12 @@ contract ProdVaultTest is BaseTestHarness {
         modifyBalanceWithKnownSlot(vault.want(), address(user), wantStartingAmount, slot);
         console.log("Approving more want.");
         user.approve(address(want), address(vault), wantStartingAmount);
-        
+
         // Users can't deposit.
         console.log("Trying to deposit while panicked.");
         FORGE_VM.expectRevert("Pausable: paused");
         user.depositAll(vault);
-        
+
         // User can still withdraw
         console.log("User withdraws all.");
         user.withdrawAll(vault);
@@ -141,7 +141,7 @@ contract ProdVaultTest is BaseTestHarness {
 
     function test_multipleUsers() external {
         _unpauseIfPaused();
-        
+
         _depositIntoVault(user);
 
         // Setup second user.
@@ -155,7 +155,7 @@ contract ProdVaultTest is BaseTestHarness {
 
         console.log("User2 depositAll.");
         _depositIntoVault(user2);
-        
+
         uint256 pricePerFullShareAfterUser2Deposit = vault.getPricePerFullShare();
 
         shift(delay);

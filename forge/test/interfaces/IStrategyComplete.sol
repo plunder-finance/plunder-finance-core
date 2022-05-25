@@ -34,9 +34,9 @@ interface IStrategyComplete {
 
     function balanceOfWant() external view returns (uint256);
 
-    function beefyFee() external view returns (uint256);
+    function plunderFee() external view returns (uint256);
 
-    function beefyFeeRecipient() external view returns (address);
+    function plunderFeeRecipient() external view returns (address);
 
     function beforeDeposit() external;
 
@@ -92,7 +92,7 @@ interface IStrategyComplete {
 
     function rewardsAvailable() external view returns (uint256);
 
-    function setBeefyFeeRecipient(address _beefyFeeRecipient) external;
+    function setPlunderFeeRecipient(address _plunderFeeRecipient) external;
 
     function setCallFee(uint256 _fee) external;
 
@@ -125,7 +125,7 @@ interface IStrategyComplete {
     function withdrawalFee() external view returns (uint256);
 
     // Only chef based strats
-    function chef() external view returns (address); 
+    function chef() external view returns (address);
 
     function setPendingRewardsFunctionName(
         string memory _pendingRewardsFunctionName
@@ -136,7 +136,7 @@ interface IStrategyComplete {
     function poolId() external view returns (uint256);
 
     // Only gas throttled strats
-    function gasprice() external view returns (address); 
+    function gasprice() external view returns (address);
 
     function shouldGasThrottle() external view returns (bool);
 
