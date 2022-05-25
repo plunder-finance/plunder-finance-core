@@ -839,7 +839,7 @@ contract PlunderUniV2Zap {
         assert(msg.sender == WETH);
     }
 
-    function beefInETH (address plunderVault, uint256 tokenAmountOutMin) external payable {
+    function swoopInETH (address plunderVault, uint256 tokenAmountOutMin) external payable {
         require(msg.value >= minimumAmount, 'Plunder: Insignificant input amount');
 
         IWETH(WETH).deposit{value: msg.value}();
@@ -847,7 +847,7 @@ contract PlunderUniV2Zap {
         _swapAndStake(plunderVault, tokenAmountOutMin, WETH);
     }
 
-    function beefIn (address plunderVault, uint256 tokenAmountOutMin, address tokenIn, uint256 tokenInAmount) external {
+    function swoopIn (address plunderVault, uint256 tokenAmountOutMin, address tokenIn, uint256 tokenInAmount) external {
         require(tokenInAmount >= minimumAmount, 'Plunder: Insignificant input amount');
         require(IERC20(tokenIn).allowance(msg.sender, address(this)) >= tokenInAmount, 'Plunder: Input token is not approved');
 
@@ -856,7 +856,7 @@ contract PlunderUniV2Zap {
         _swapAndStake(plunderVault, tokenAmountOutMin, tokenIn);
     }
 
-    function beefOut (address plunderVault, uint256 withdrawAmount) external {
+    function swoopOut (address plunderVault, uint256 withdrawAmount) external {
         (IPlunderVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
         IERC20(plunderVault).safeTransferFrom(msg.sender, address(this), withdrawAmount);
@@ -875,7 +875,7 @@ contract PlunderUniV2Zap {
         _returnAssets(tokens);
     }
 
-    function beefOutAndSwap(address plunderVault, uint256 withdrawAmount, address desiredToken, uint256 desiredTokenOutMin) external {
+    function swoopOutAndSwap(address plunderVault, uint256 withdrawAmount, address desiredToken, uint256 desiredTokenOutMin) external {
         (IPlunderVaultV6 vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
         address token0 = pair.token0();
         address token1 = pair.token1();
