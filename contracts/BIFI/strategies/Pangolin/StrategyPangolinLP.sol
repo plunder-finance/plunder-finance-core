@@ -43,8 +43,8 @@ contract StrategyPangolinLP is Ownable, Pausable {
     address public rewardPool;
 
     /**
-     * @dev Beefy Contracts:
-     * {treasury} - Address of the Beefy treasury. Rewards accumulate here and are then sent to BSC.
+     * @dev Plunder Contracts:
+     * {treasury} - Address of the Plunder treasury. Rewards accumulate here and are then sent to BSC.
      * {vault} - Address of the vault that controls the strategy's funds.
      * {strategist} - Address of the strategy author/deployer where strategist fee will go.
      */
@@ -155,7 +155,7 @@ contract StrategyPangolinLP is Ownable, Pausable {
 
         uint256 withdrawalFee = pairBal.mul(WITHDRAWAL_FEE).div(WITHDRAWAL_MAX);
         IERC20(lpPair).safeTransfer(vault, pairBal.sub(withdrawalFee));
-    
+
     }
 
     /**
@@ -177,7 +177,7 @@ contract StrategyPangolinLP is Ownable, Pausable {
     }
 
     /**
-     * @dev Takes out 4.5% as system fees from the rewards. 
+     * @dev Takes out 4.5% as system fees from the rewards.
      * 0.5% -> Call Fee
      * 0.5% -> Treasury fee
      * 0.5% -> Strategist fee
@@ -199,7 +199,7 @@ contract StrategyPangolinLP is Ownable, Pausable {
         IERC20(wavax).safeTransfer(strategist, strategistFee);
 
     }
-    
+
     /**
      * @dev Swaps {png} for {lpToken0}, {lpToken1} & {wavax} using Pangolin.
      */
@@ -242,7 +242,7 @@ contract StrategyPangolinLP is Ownable, Pausable {
     }
 
     /**
-     * @dev Function that has to be called as part of strat migration. It sends all the available funds back to the 
+     * @dev Function that has to be called as part of strat migration. It sends all the available funds back to the
      * vault, ready to be migrated to the new strat.
      */
     function retireStrat() external {

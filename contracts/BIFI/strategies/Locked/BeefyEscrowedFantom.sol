@@ -14,7 +14,7 @@ interface IWrappedNative is IERC20 {
     function withdraw(uint wad) external;
 }
 
-contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
+contract PlunderEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -70,8 +70,8 @@ contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
         _deposit(msg.sender, _amount);
     }
 
-    // deposit unwrapped 
-    function depositNative() external payable { 
+    // deposit unwrapped
+    function depositNative() external payable {
         _deposit(msg.sender, msg.value);
     }
 
@@ -118,7 +118,7 @@ contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
         (,,,time) = stakingContract.getLockupInfo(address(this), validatorID);
     }
 
-    // validators end lock time 
+    // validators end lock time
     function validatorUnlockTime() public view returns (uint256 time) {
         (,,time,) = stakingContract.getLockupInfo(validator, validatorID);
     }
@@ -128,7 +128,7 @@ contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
         (,,,time) = stakingContract.getLockupInfo(validator, validatorID);
     }
 
-    // calculate how much duration we should lock 
+    // calculate how much duration we should lock
     function lockTime() internal view returns (uint256 time) {
         uint256 suggestedLockUp = validatorUnlockTime().sub(block.timestamp).sub(oneWeek);
         if (currentLockDuration() >= suggestedLockUp) {
@@ -148,22 +148,22 @@ contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
         return stakingContract.getLockedStake(address(this), validatorID);
     }
 
-    // Balance of unlocked want in the staking contract 
+    // Balance of unlocked want in the staking contract
     function balanceOfUnlocked() public view returns (uint256) {
         return stakingContract.getUnlockedStake(address(this), validatorID);
     }
 
-    // pending witdrawal request information 
+    // pending witdrawal request information
     function pendingWithdrawalRequest() public view returns (uint256 time, uint256 amount) {
         (,time, amount) = stakingContract.getWithdrawalRequest(address(this), validatorID, wrID);
     }
 
-    // pending reward balance 
+    // pending reward balance
     function pendingStakingRewards() external view returns (uint256) {
         return stakingContract.pendingRewards(address(this), validatorID);
     }
 
-    // enable withdraw of funds 
+    // enable withdraw of funds
     function enableWithdraw() external onlyOwner {
         _pause();
         stakingContract.unlockStake(validatorID, balanceOfLocked());
@@ -171,7 +171,7 @@ contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
         withdrawalTime = withdrawalPeriodTime.add(block.timestamp);
     }
 
-    // withdraw all want from staking contract 
+    // withdraw all want from staking contract
     function withdrawFromStaking() external onlyOwner {
         require(block.timestamp >= withdrawalTime, "It takes 7 Days to withdraw");
         stakingContract.withdraw(validatorID, wrID);
@@ -185,7 +185,7 @@ contract BeefyEscrowedFantom is ERC20, ReentrancyGuard, LockedAssetManager {
         stakingContract.relockStake(validatorID, lockTime(), balanceOfUnlocked());
     }
 
-    // Relock stake 
+    // Relock stake
     function relockFunds() external onlyOwner {
         _unpause();
         uint256 relockAmount = balanceOfWant();

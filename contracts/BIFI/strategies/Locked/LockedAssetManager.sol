@@ -11,7 +11,7 @@ contract LockedAssetManager is  Ownable, Pausable {
     using SafeERC20 for IERC20;
 
     /**
-     * @dev Beefy Contracts:
+     * @dev Plunder Contracts:
      * {keeper} - Address to manage a few lower risk features of the strat.
      * {rewardPool} - Address for distributing locked want rewards.
      */

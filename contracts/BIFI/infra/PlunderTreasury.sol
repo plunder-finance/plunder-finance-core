@@ -6,7 +6,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 
-contract BeefyTreasury is Ownable {
+contract PlunderTreasury is Ownable {
     using SafeERC20 for IERC20;
 
     function withdrawTokens(address _token, address _to, uint256 _amount) external onlyOwner {

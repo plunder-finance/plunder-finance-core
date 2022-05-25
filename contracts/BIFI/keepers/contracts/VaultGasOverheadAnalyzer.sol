@@ -19,7 +19,7 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
 
-    IBeefyRegistry private _vaultRegistry;
+    IPlunderRegistry private _vaultRegistry;
 
     uint256 private _index;
     uint256 private _lastUpdateCycle; // Last time all harvestGasOverhead were updated in vault array.
@@ -64,7 +64,7 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
         uint256 currentIndex = UpkeepLibrary._getCircularIndex(_index, 0, vaults.length);
 
         // Get vault to analyze.
-        IBeefyVault vaultToAnalyze = IBeefyVault(vaults[currentIndex]);
+        IPlunderVault vaultToAnalyze = IPlunderVault(vaults[currentIndex]);
 
         ( bool didHarvest, uint256 gasOverhead ) = _analyzeHarvest(vaultToAnalyze);
 
@@ -77,8 +77,8 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
         return (true, performData_);
     }
 
-    function _analyzeHarvest(IBeefyVault vault) internal view returns (bool didHarvest_, uint256 gasOverhead_) {
-        IBeefyStrategyEthCall strategy = IBeefyStrategyEthCall(address(IBeefyVault(vault).strategy()));
+    function _analyzeHarvest(IPlunderVault vault) internal view returns (bool didHarvest_, uint256 gasOverhead_) {
+        IPlunderStrategyEthCall strategy = IPlunderStrategyEthCall(address(IPlunderVault(vault).strategy()));
 
         (bool didHarvest, uint256 gasOverhead) = _tryHarvest(strategy);
 
@@ -99,7 +99,7 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
         return (false, 0);
     }
 
-    function _tryHarvest(IBeefyStrategyEthCall strategy) internal view returns (bool didHarvest_, uint256 gasOverhead_) {
+    function _tryHarvest(IPlunderStrategyEthCall strategy) internal view returns (bool didHarvest_, uint256 gasOverhead_) {
         uint256 gasBefore = gasleft();
         try strategy.harvest(_dummyCallFeeRecipient) {
             didHarvest_ = true;
@@ -112,7 +112,7 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
         gasOverhead_ = gasBefore - gasAfter;
     }
 
-    function _tryOldHarvest(IBeefyStrategyEthCall strategy) internal view returns (bool didHarvest_, uint256 gasOverhead_) {
+    function _tryOldHarvest(IPlunderStrategyEthCall strategy) internal view returns (bool didHarvest_, uint256 gasOverhead_) {
         uint256 gasBefore = gasleft();
         try strategy.harvestWithCallFeeRecipient(_dummyCallFeeRecipient) {
             didHarvest_ = true;

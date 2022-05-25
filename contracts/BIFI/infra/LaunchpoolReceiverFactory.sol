@@ -14,7 +14,7 @@ contract LaunchpoolReceiverFactory is Ownable {
     event ReceiverCreated(address receiver);
 
     function createReceiver(address token) external returns (address) {
-        BeefyLaunchpoolReceiver receiver = new BeefyLaunchpoolReceiver(msg.sender, defaultDev, token, fee);
+        PlunderLaunchpoolReceiver receiver = new PlunderLaunchpoolReceiver(msg.sender, defaultDev, token, fee);
         receiver.transferOwnership(owner());
         emit ReceiverCreated(address(receiver));
         return address(receiver);

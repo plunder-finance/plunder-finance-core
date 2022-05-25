@@ -39,7 +39,7 @@ import "../../interfaces/plunder/IVault.sol";
  * Requirements:
  * - Subvaults that serve as workers can't charge withdrawal fees to the balancer.
  */
-contract BeefyLP is Ownable, Pausable {
+contract PlunderLP is Ownable, Pausable {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 

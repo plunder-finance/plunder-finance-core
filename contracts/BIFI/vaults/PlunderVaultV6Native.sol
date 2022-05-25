@@ -16,7 +16,7 @@ import "../interfaces/common/IWrappedNative.sol";
  * This is the contract that receives funds and that users interface with.
  * The yield optimizing strategy itself is implemented in a separate 'Strategy.sol' contract.
  */
-contract BeefyVaultV6Native is ERC20, Ownable, ReentrancyGuard {
+contract PlunderVaultV6Native is ERC20, Ownable, ReentrancyGuard {
     using SafeERC20 for IWrappedNative;
     using SafeERC20 for IERC20;
     using SafeMath for uint256;

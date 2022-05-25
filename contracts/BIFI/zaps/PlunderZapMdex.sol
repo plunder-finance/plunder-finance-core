@@ -10,7 +10,7 @@
 // MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 // GNU Affero General Public License for more details.
 
-// @author Wivern for Beefy.Finance
+// @author Wivern for Plunder.Finance
 // @notice This contract adds liquidity to Uniswap V2 compatible liquidity pair pools and stake.
 
 pragma solidity ^0.6.0;
@@ -26,17 +26,17 @@ interface IWETH is IERC20 {
     function withdraw(uint256 wad) external;
 }
 
-interface IBeefyVault is IERC20 {
+interface IPlunderVault is IERC20 {
     function deposit(uint256 amount) external;
     function withdraw(uint256 shares) external;
-    function want() external pure returns (address); // Beefy Vault V6
-    function token() external pure returns (address); // Beefy Vault V5
+    function want() external pure returns (address); // Plunder Vault V6
+    function token() external pure returns (address); // Plunder Vault V5
 }
 
-contract BeefyZapMdex {
+contract PlunderZapMdex {
     using SafeMath for uint256;
     using SafeERC20 for IERC20;
-    using SafeERC20 for IBeefyVault;
+    using SafeERC20 for IPlunderVault;
 
     IMdexRouter public immutable router;
     address public immutable WETH;
@@ -56,7 +56,7 @@ contract BeefyZapMdex {
     }
 
     function beefInETH (address plunderVault, uint256 tokenAmountOutMin) external payable {
-        require(msg.value >= minimumAmount, 'Beefy: Insignificant input amount');
+        require(msg.value >= minimumAmount, 'Plunder: Insignificant input amount');
 
         IWETH(WETH).deposit{value: msg.value}();
 
@@ -64,8 +64,8 @@ contract BeefyZapMdex {
     }
 
     function beefIn (address plunderVault, uint256 tokenAmountOutMin, address tokenIn, uint256 tokenInAmount) external {
-        require(tokenInAmount >= minimumAmount, 'Beefy: Insignificant input amount');
-        require(IERC20(tokenIn).allowance(msg.sender, address(this)) >= tokenInAmount, 'Beefy: Input token is not approved');
+        require(tokenInAmount >= minimumAmount, 'Plunder: Insignificant input amount');
+        require(IERC20(tokenIn).allowance(msg.sender, address(this)) >= tokenInAmount, 'Plunder: Input token is not approved');
 
         IERC20(tokenIn).safeTransferFrom(msg.sender, address(this), tokenInAmount);
 
@@ -73,7 +73,7 @@ contract BeefyZapMdex {
     }
 
     function beefOut (address plunderVault, uint256 withdrawAmount) external {
-        (IBeefyVault vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
+        (IPlunderVault vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
         IERC20(plunderVault).safeTransferFrom(msg.sender, address(this), withdrawAmount);
         vault.withdraw(withdrawAmount);
@@ -92,10 +92,10 @@ contract BeefyZapMdex {
     }
 
     function beefOutAndSwap(address plunderVault, uint256 withdrawAmount, address desiredToken, uint256 desiredTokenOutMin) external {
-        (IBeefyVault vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
+        (IPlunderVault vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
         address token0 = pair.token0();
         address token1 = pair.token1();
-        require(token0 == desiredToken || token1 == desiredToken, 'Beefy: desired token not present in liquidity pair');
+        require(token0 == desiredToken || token1 == desiredToken, 'Plunder: desired token not present in liquidity pair');
 
         vault.safeTransferFrom(msg.sender, address(this), withdrawAmount);
         vault.withdraw(withdrawAmount);
@@ -120,8 +120,8 @@ contract BeefyZapMdex {
         require(amount1 >= minimumAmount, 'UniswapV2Router: INSUFFICIENT_B_AMOUNT');
     }
 
-    function _getVaultPair (address plunderVault) private view returns (IBeefyVault vault, IUniswapV2Pair pair) {
-        vault = IBeefyVault(plunderVault);
+    function _getVaultPair (address plunderVault) private view returns (IPlunderVault vault, IUniswapV2Pair pair) {
+        vault = IPlunderVault(plunderVault);
 
         try vault.want() returns (address pairAddress) {
             pair = IUniswapV2Pair(pairAddress); // Vault V6
@@ -129,17 +129,17 @@ contract BeefyZapMdex {
             pair = IUniswapV2Pair(vault.token()); // Vault V5
         }
 
-        require(pair.factory() == router.factory(), 'Beefy: Incompatible liquidity pair factory');
+        require(pair.factory() == router.factory(), 'Plunder: Incompatible liquidity pair factory');
     }
 
     function _swapAndStake(address plunderVault, uint256 tokenAmountOutMin, address tokenIn) private {
-        (IBeefyVault vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
+        (IPlunderVault vault, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
         (uint256 reserveA, uint256 reserveB,) = pair.getReserves();
-        require(reserveA > minimumAmount && reserveB > minimumAmount, 'Beefy: Liquidity pair reserves too low');
+        require(reserveA > minimumAmount && reserveB > minimumAmount, 'Plunder: Liquidity pair reserves too low');
 
         bool isInputA = pair.token0() == tokenIn;
-        require(isInputA || pair.token1() == tokenIn, 'Beefy: Input token not present in liquidity pair');
+        require(isInputA || pair.token1() == tokenIn, 'Plunder: Input token not present in liquidity pair');
 
         address[] memory path = new address[](2);
         path[0] = tokenIn;
@@ -176,7 +176,7 @@ contract BeefyZapMdex {
                 if (tokens[i] == WETH) {
                     IWETH(WETH).withdraw(balance);
                     (bool success,) = msg.sender.call{value: balance}(new bytes(0));
-                    require(success, 'Beefy: ETH transfer failed');
+                    require(success, 'Plunder: ETH transfer failed');
                 } else {
                     IERC20(tokens[i]).safeTransfer(msg.sender, balance);
                 }
@@ -195,7 +195,7 @@ contract BeefyZapMdex {
         (, IUniswapV2Pair pair) = _getVaultPair(plunderVault);
 
         bool isInputA = pair.token0() == tokenIn;
-        require(isInputA || pair.token1() == tokenIn, 'Beefy: Input token not present in liquidity pair');
+        require(isInputA || pair.token1() == tokenIn, 'Plunder: Input token not present in liquidity pair');
 
         (uint256 reserveA, uint256 reserveB,) = pair.getReserves();
         (reserveA, reserveB) = isInputA ? (reserveA, reserveB) : (reserveB, reserveA);

@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin/contracts/math/SafeMath.sol";
 import "@openzeppelin/contracts/utils/Address.sol";
 
-contract BeefyRefund {
+contract PlunderRefund {
     using SafeERC20 for IERC20;
     using Address for address;
     using SafeMath for uint256;
@@ -15,7 +15,7 @@ contract BeefyRefund {
     address constant public dead = address(0x000000000000000000000000000000000000dEaD);
     address public token;
     address public mootoken;
-    
+
     uint256 public pricePerFullShare;
 
     constructor(address _token, address _mootoken, uint256 _pricePerFullShare) public {

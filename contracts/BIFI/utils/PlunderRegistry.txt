@@ -8,7 +8,7 @@ import "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
 
 import "../interfaces/plunder/IVault.sol";
 
-contract BeefyRegistry {
+contract PlunderRegistry {
   using Address for address;
   using SafeMath for uint256;
   using EnumerableSet for EnumerableSet.AddressSet;
@@ -28,7 +28,7 @@ contract BeefyRegistry {
   }
 
   function getName() external pure returns (string memory) {
-    return "BeefyRegistry";
+    return "PlunderRegistry";
   }
 
   function addVault(address _vault) public onlyGovernance {

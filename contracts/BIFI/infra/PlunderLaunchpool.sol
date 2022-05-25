@@ -6,7 +6,7 @@ import "@openzeppelin-2/contracts/ownership/Ownable.sol";
 
 import "../utils/LPTokenWrapper.sol";
 
-contract BeefyLaunchpool is LPTokenWrapper, Ownable {
+contract PlunderLaunchpool is LPTokenWrapper, Ownable {
     IERC20 public rewardToken;
     uint256 public duration;
 
@@ -103,7 +103,7 @@ contract BeefyLaunchpool is LPTokenWrapper, Ownable {
         uint256 reward = IERC20(rewardToken).balanceOf(address(this));
 
         require(reward != 0, "no rewards");
-            
+
         if (block.timestamp >= periodFinish) {
             rewardRate = reward.div(duration);
         } else {

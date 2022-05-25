@@ -24,7 +24,7 @@ contract StrategyBifiMaxi is Ownable, Pausable {
     /**
      * @dev Tokens Used:
      * {wbnb} - The token that rewards are paid in.
-     * {bifi} - BeefyFinance token. The token this strategy looks to maximize.
+     * {bifi} - PlunderFinance token. The token this strategy looks to maximize.
      */
     address constant public wbnb = address(0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c);
     address constant public bifi = address(0xCa3F508B8e4Dd382eE878A314789373D80A5190A);
@@ -36,7 +36,7 @@ contract StrategyBifiMaxi is Ownable, Pausable {
     address constant public unirouter = address(0x3bc677674df90A9e5D741f28f6CA303357D0E4Ec);
 
     /**
-     * @dev Beefy Contracts:
+     * @dev Plunder Contracts:
      * {rewards} - Reward pool where the {bifi} is staked.
      * {vault} - Address of the vault that controls the strategy's funds.
      */
@@ -50,7 +50,7 @@ contract StrategyBifiMaxi is Ownable, Pausable {
      * {REWARDS_FEE} - 0.5% goes to BIFI holders through the {rewards} pool.
      * {CALL_FEE} - 0.5% goes to pay for harvest execution.
      * {MAX_FEE} - Aux const used to safely calc the correct amounts.
-     * 
+     *
      * {WITHDRAWAL_FEE} - Fee taxed when a user withdraws funds. 5 === 0.05% fee.
      * {WITHDRAWAL_MAX} - Aux const used to safely calc the correct amounts.
      */
@@ -66,7 +66,7 @@ contract StrategyBifiMaxi is Ownable, Pausable {
      * {wbnbToBifiRoute} - Route we take to get from {wbnb} into {bifi}.
      */
     address[] public wbnbToBifiRoute = [wbnb, bifi];
-  
+
     /**
      * @dev Initializes the strategy with the token to maximize.
      */
@@ -76,7 +76,7 @@ contract StrategyBifiMaxi is Ownable, Pausable {
         IERC20(wbnb).safeApprove(unirouter, uint(-1));
         IERC20(bifi).safeApprove(rewards, uint(-1));
     }
-    
+
     /**
      * @dev Function that puts the funds to work.
      * It gets called whenever someone deposits in the strategy's vault contract.
@@ -100,15 +100,15 @@ contract StrategyBifiMaxi is Ownable, Pausable {
 
         uint256 bifiBal = IERC20(bifi).balanceOf(address(this));
 
-        if (bifiBal < _amount) {   
+        if (bifiBal < _amount) {
             IRewardPool(rewards).withdraw(_amount.sub(bifiBal));
             bifiBal = IERC20(bifi).balanceOf(address(this));
         }
 
         if (bifiBal > _amount) {
-            bifiBal = _amount;    
+            bifiBal = _amount;
         }
-        
+
         uint256 withdrawalFee = bifiBal.mul(WITHDRAWAL_FEE).div(WITHDRAWAL_MAX);
         IERC20(bifi).safeTransfer(vault, bifiBal.sub(withdrawalFee));
     }
@@ -129,7 +129,7 @@ contract StrategyBifiMaxi is Ownable, Pausable {
     }
 
     /**
-     * @dev Takes out 1% as system fees from the rewards. 
+     * @dev Takes out 1% as system fees from the rewards.
      * 0.5% -> Call Fee
      * 0.5% -> Rewards fee
      */
@@ -174,9 +174,9 @@ contract StrategyBifiMaxi is Ownable, Pausable {
     }
 
     /**
-     * @dev Function that has to be called as part of strat migration. It sends all the available funds back to the 
+     * @dev Function that has to be called as part of strat migration. It sends all the available funds back to the
      * vault, ready to be migrated to the new strat.
-     */ 
+     */
     function retireStrat() external onlyOwner {
         panic();
 

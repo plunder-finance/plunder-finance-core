@@ -25,7 +25,7 @@ contract LaunchpoolFactory is Ownable {
 
     function createLaunchpool(address _stakedToken, address _rewardToken, uint256 _durationDays) external {
         uint256 duration = 3600 * 24 * _durationDays;
-        BeefyLaunchpool launchpool = new BeefyLaunchpool(_stakedToken, _rewardToken, duration);
+        PlunderLaunchpool launchpool = new PlunderLaunchpool(_stakedToken, _rewardToken, duration);
         launchpool.transferOwnership(owner());
         emit LaunchpoolCreated(address(launchpool));
     }

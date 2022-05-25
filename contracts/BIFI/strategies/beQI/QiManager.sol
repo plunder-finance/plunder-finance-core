@@ -21,7 +21,7 @@ contract QiManager is Ownable, Pausable {
     using SafeERC20 for IERC20;
 
     /**
-     * @dev Beefy Contracts:
+     * @dev Plunder Contracts:
      * {keeper} - Address to manage a few lower risk features of the strat.
      * {rewardPool} - Address for QI rewards distribution.
      */
@@ -79,14 +79,14 @@ contract QiManager is Ownable, Pausable {
         rewardPool.transferOwnership(_newOwner);
     }
 
-    // set voter params 
+    // set voter params
     function setVoterParams(IDelegateManager _delegationManager, bytes32 _newId) external onlyManager {
         emit NewVoterParams(_delegationManager, _newId);
         delegateManager = _delegationManager;
         id = _newId;
     }
 
-   // set vote delegation 
+   // set vote delegation
     function setVoteDelegation (address _voter) external onlyManager {
         _setVoteDelegation(_voter);
     }
@@ -95,7 +95,7 @@ contract QiManager is Ownable, Pausable {
         delegateManager.setDelegate(id, _voter);
     }
 
-    // clear vote delegation 
+    // clear vote delegation
     function clearVoteDelegation() external onlyManager {
         delegateManager.clearDelegate(id);
     }

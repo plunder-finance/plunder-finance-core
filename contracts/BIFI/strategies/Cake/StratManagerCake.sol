@@ -7,7 +7,7 @@ import "@openzeppelin/contracts/utils/Pausable.sol";
 
 contract StratManagerCake is Ownable, Pausable {
     /**
-     * @dev Beefy Contracts:
+     * @dev Plunder Contracts:
      * {keeper} - Address to manage a few lower risk features of the strat
      * {vault} - Address of the vault that controls the strategy's funds.
      * {unirouter} - Address of exchange to execute swaps.
@@ -22,7 +22,7 @@ contract StratManagerCake is Ownable, Pausable {
      * @param _keeper address to use as alternative owner.
      * @param _unirouter router to use for swaps
      * @param _vault address of parent vault.
-     * @param _plunderFeeRecipient address where to send Beefy's fees.
+     * @param _plunderFeeRecipient address where to send Plunder's fees.
      */
     constructor(
         address _keeper,
@@ -70,7 +70,7 @@ contract StratManagerCake is Ownable, Pausable {
      * @dev Updates plunder fee recipient.
      * @param _plunderFeeRecipient new plunder fee recipient address.
      */
-    function setBeefyFeeRecipient(address _plunderFeeRecipient) external onlyOwner {
+    function setPlunderFeeRecipient(address _plunderFeeRecipient) external onlyOwner {
         plunderFeeRecipient = _plunderFeeRecipient;
     }
 

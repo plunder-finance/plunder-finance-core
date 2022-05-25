@@ -17,7 +17,7 @@ interface ILaunchpool {
     function rewardToken() external view returns (address);
 }
 
-contract BeefyLaunchpoolReceiver is Ownable {
+contract PlunderLaunchpoolReceiver is Ownable {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -65,7 +65,7 @@ contract BeefyLaunchpoolReceiver is Ownable {
         }
 
         uint256 duration = 3600 * 24 * _durationDays;
-        BeefyLaunchpool newLaunchpool = new BeefyLaunchpool(_stakedToken, _rewardToken, duration);
+        PlunderLaunchpool newLaunchpool = new PlunderLaunchpool(_stakedToken, _rewardToken, duration);
         newLaunchpool.transferOwnership(owner());
 
         launchpool = address(newLaunchpool);

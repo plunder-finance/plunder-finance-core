@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/math/SafeMath.sol";
 
 import "../interfaces/common/IUniswapRouterETH.sol";
 
-contract BeefyFeeBatch is Ownable {
+contract PlunderFeeBatch is Ownable {
     using SafeERC20 for IERC20;
     using SafeMath for uint256;
 
@@ -29,11 +29,11 @@ contract BeefyFeeBatch is Ownable {
     address[] public wNativeToBifiRoute;
 
     constructor(
-        address _treasury, 
-        address _rewardPool, 
-        address _unirouter, 
-        address _bifi, 
-        address _wNative 
+        address _treasury,
+        address _rewardPool,
+        address _unirouter,
+        address _bifi,
+        address _wNative
     ) public {
         treasury = _treasury;
         rewardPool = _rewardPool;
@@ -51,14 +51,14 @@ contract BeefyFeeBatch is Ownable {
     event NewUnirouter(address oldUnirouter, address newUnirouter);
     event NewBifiRoute(address[] oldRoute, address[] newRoute);
 
-    // Main function. Divides Beefy's profits.
+    // Main function. Divides Plunder's profits.
     function harvest() public {
         uint256 wNativeBal = IERC20(wNative).balanceOf(address(this));
 
         uint256 treasuryHalf = wNativeBal.mul(TREASURY_FEE).div(MAX_FEE).div(2);
         IERC20(wNative).safeTransfer(treasury, treasuryHalf);
         IUniswapRouterETH(unirouter).swapExactTokensForTokens(treasuryHalf, 0, wNativeToBifiRoute, treasury, now);
-        
+
         uint256 rewardsFeeAmount = wNativeBal.mul(REWARD_POOL_FEE).div(MAX_FEE);
         IERC20(wNative).safeTransfer(rewardPool, rewardsFeeAmount);
     }
@@ -90,7 +90,7 @@ contract BeefyFeeBatch is Ownable {
         emit NewBifiRoute(wNativeToBifiRoute, _route);
         wNativeToBifiRoute = _route;
     }
-    
+
     // Rescue locked funds sent by mistake
     function inCaseTokensGetStuck(address _token) external onlyOwner {
         require(_token != wNative, "!safe");

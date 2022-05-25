@@ -26,7 +26,7 @@ contract StrategyTraderJoeBoostedLP is StratManager, FeeManager, GasThrottler {
     address public lpToken0;
     address public lpToken1;
 
-    // Beefy Contracts
+    // Plunder Contracts
     address public boostStaker;
 
     // Third party contracts

@@ -2,7 +2,7 @@
 
 pragma solidity ^0.8.4;
 
-contract BeefyLastHarvestMulticall {
+contract PlunderLastHarvestMulticall {
 
     function getUint(address addr, bytes memory data) internal view returns (uint result) {
         result = 0;

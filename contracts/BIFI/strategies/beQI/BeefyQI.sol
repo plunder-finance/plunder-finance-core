@@ -9,29 +9,29 @@ import "./IeQI.sol";
 import "./QiManager.sol";
 
 
-contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
+contract PlunderQI is ERC20, ReentrancyGuard, QiManager {
     using SafeERC20 for IERC20;
 
     // Addresses used
     IERC20 public want;
     IeQI public eQI;
 
-    // Our reserve integers 
+    // Our reserve integers
     uint16 public constant MAX = 10000;
     uint32 public constant MAX_LOCK = 60108430;
 
-    uint256 public reserveRate; 
+    uint256 public reserveRate;
 
     event DepositWant(uint256 tvl);
     event Withdraw(uint256 tvl);
     event RecoverTokens(address token, uint256 amount);
     event UpdatedReserveRate(uint256 newRate);
 
-    constructor( 
+    constructor(
         address _eQI,
         address _keeper,
         uint256 _reserveRate,
-        address _rewardPool, 
+        address _rewardPool,
         string memory _name,
         string memory _symbol
     ) QiManager(_keeper, _rewardPool) ERC20(_name, _symbol) {
@@ -52,7 +52,7 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
         _deposit(_amount);
     }
 
-    // Deposits QI and mint beQI, harvests and checks for eQI deposit opportunities first. 
+    // Deposits QI and mint beQI, harvests and checks for eQI deposit opportunities first.
     function _deposit(uint256 _amount) internal nonReentrant whenNotPaused {
         harvestAndDepositQI();
         uint256 _pool = balanceOfWant();
@@ -66,7 +66,7 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
         }
     }
 
-    // Withdraw capable if we have enough QI in the contract. 
+    // Withdraw capable if we have enough QI in the contract.
     function withdraw(uint256 _amount) external {
         require(_amount <= withdrawableBalance(), "Not enough QI");
             _burn(msg.sender, _amount);
@@ -75,9 +75,9 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
     }
 
     // We harvest QI on every deposit, if we can deposit to earn more eQI we deposit based on required reserve
-    function harvestAndDepositQI() public { 
+    function harvestAndDepositQI() public {
         if (totalQI() > 0) {
-            // How many blocks are we going to lock for? 
+            // How many blocks are we going to lock for?
             (,, uint256 lockExtension) = lockInfo();
             if (balanceOfWant() - outstandingReward() > requiredReserve()) {
                 uint256 availableBalance = balanceOfWant() - outstandingReward() - requiredReserve();
@@ -87,7 +87,7 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
                 eQI.enter(0, lockExtension);
             }
         }
-           
+
         harvest();
     }
 
@@ -106,12 +106,12 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
         reqReserve = balanceOfQiInVe() * reserveRate / MAX;
     }
 
-    // How much reward is available? We subtract total QIs from the total supply of beQI.  
+    // How much reward is available? We subtract total QIs from the total supply of beQI.
     function outstandingReward() public view returns (uint256) {
         return totalQI() - totalSupply();
     }
 
-    // Total QI in eQI contract and beQI contract. 
+    // Total QI in eQI contract and beQI contract.
     function totalQI() public view returns (uint256) {
         return balanceOfWant() + balanceOfQiInVe();
     }
@@ -121,7 +121,7 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
         return want.balanceOf(address(this));
     }
 
-    // Withdrawable Balance 
+    // Withdrawable Balance
     function withdrawableBalance() public view returns (uint256) {
         return balanceOfWant() - outstandingReward();
     }
@@ -131,12 +131,12 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
         return eQI.balanceOf(address(this));
     }
 
-    // How many QI we got earning? 
+    // How many QI we got earning?
     function balanceOfQiInVe() public view returns (uint256 qis) {
         (qis,) = eQI.userInfo(address(this));
     }
 
-    // What is our end block and blocks remaining in lock? 
+    // What is our end block and blocks remaining in lock?
     function lockInfo() public view returns (uint256 endBlock, uint256 blocksRemaining, uint256 lockExtension) {
         (, endBlock) = eQI.userInfo(address(this));
         blocksRemaining = endBlock > block.number ? endBlock - block.number : 0;
@@ -156,13 +156,13 @@ contract BeefyQI is ERC20, ReentrancyGuard, QiManager {
     }
 
     // panic the vault if emergency is enabled by QI
-    function panic() external onlyManager { 
+    function panic() external onlyManager {
         pause();
         eQI.emergencyExit();
     }
 
-    // Adjust reserve rate 
-    function adjustReserve(uint256 _rate) external onlyOwner { 
+    // Adjust reserve rate
+    function adjustReserve(uint256 _rate) external onlyOwner {
         require(_rate <= MAX, "Higher than max");
         reserveRate = _rate;
         emit UpdatedReserveRate(_rate);

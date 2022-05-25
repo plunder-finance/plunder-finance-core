@@ -16,9 +16,9 @@ import "../../interfaces/mdex/IMasterChef.sol";
 /**
  * @dev Implementation of a strategy to get yields from farming LP Pools in MDex.
  * This strategy simply deposits whatever funds it receives from the vault into the selected HECOPool pool.
- * MDX rewards from providing liquidity are farmed every few minutes, sold and split 50/50. 
+ * MDX rewards from providing liquidity are farmed every few minutes, sold and split 50/50.
  * The corresponding pair of assets are bought and more liquidity is added to the HECOPool pool.
- * 
+ *
  * This strat is currently compatible with all LP pools.
  */
 contract StrategyMdexLP is Ownable, Pausable {
@@ -50,8 +50,8 @@ contract StrategyMdexLP is Ownable, Pausable {
     uint8 public poolId;
 
     /**
-     * @dev Beefy Contracts:
-     * {treasury} - Address of the Beefy treasury. Rewards accumulate here and are then sent to BSC.
+     * @dev Plunder Contracts:
+     * {treasury} - Address of the Plunder treasury. Rewards accumulate here and are then sent to BSC.
      * {vault} - Address of the vault that controls the strategy's funds.
      * {strategist} - Address of the strategy author/deployer where strategist fee will go.
      */
@@ -183,8 +183,8 @@ contract StrategyMdexLP is Ownable, Pausable {
     }
 
     /**
-     * @dev Takes out 4.5% as system fees from the rewards. 
-     * 3.5% -> Beefy Treasury
+     * @dev Takes out 4.5% as system fees from the rewards.
+     * 3.5% -> Plunder Treasury
      * 0.5% -> Call Fee
      * 0.5% -> Strategist fee
      */
@@ -247,7 +247,7 @@ contract StrategyMdexLP is Ownable, Pausable {
     }
 
     /**
-     * @dev Function that has to be called as part of strat migration. It sends all the available funds back to the 
+     * @dev Function that has to be called as part of strat migration. It sends all the available funds back to the
      * vault, ready to be migrated to the new strat.
      */
     function retireStrat() external {

@@ -2,7 +2,7 @@
 pragma solidity >=0.6.0 <0.9.0;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
 
-interface IBeefyStrategy {
+interface IPlunderStrategy {
     function vault() external view returns (address);
 
     function want() external view returns (IERC20Upgradeable);

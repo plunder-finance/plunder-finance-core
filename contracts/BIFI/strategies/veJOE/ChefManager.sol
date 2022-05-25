@@ -17,7 +17,7 @@ contract ChefManager is Ownable, Pausable, IERC1271 {
     using ECDSA for bytes32;
 
     /**
-     * @dev Beefy Contracts:
+     * @dev Plunder Contracts:
      * {JoeChef} - Address of the boosted chef
      * {keeper} - Address to manage a few lower risk features of the strat.
      * {joeBatch} - Address for distributing locked want rewards.
@@ -28,7 +28,7 @@ contract ChefManager is Ownable, Pausable, IERC1271 {
     // beJOE fee taken from strats
     uint256 public beJoeShare;
 
-    // Strategy mapping 
+    // Strategy mapping
     mapping(address => mapping (uint256 => address)) public whitelistedStrategy;
     mapping(address => address) public replacementStrategy;
 
@@ -82,7 +82,7 @@ contract ChefManager is Ownable, Pausable, IERC1271 {
     function setJoeBatch(address _joeBatch) external onlyOwner {
         emit NewJoeBatch(joeBatch, _joeBatch);
         joeBatch = _joeBatch;
-        
+
     }
 
     /**
@@ -154,6 +154,6 @@ contract ChefManager is Ownable, Pausable, IERC1271 {
             return 0x1626ba7e;
         } else {
             return 0xffffffff;
-        }  
-    }    
+        }
+    }
 }

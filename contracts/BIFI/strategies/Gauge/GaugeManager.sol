@@ -15,7 +15,7 @@ contract GaugeManager is Initializable, OwnableUpgradeable, PausableUpgradeable 
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     /**
-     * @dev Beefy Contracts:
+     * @dev Plunder Contracts:
      * {feeDistributor} - Address of the fee distributor for veWant rewards.
      * {gaugeProxy} - Address for voting on gauge weightings.
      * {keeper} - Address to manage a few lower risk features of the strat.

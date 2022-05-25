@@ -14,15 +14,15 @@ interface IRewardPool {
 
 interface IUniswapRouter {
     function swapExactTokensForTokens(
-        uint amountIn, 
-        uint amountOutMin, 
-        address[] calldata path, 
-        address to, 
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
         uint deadline
     ) external returns (uint[] memory amounts);
 }
 
-contract BeefyFeeBatchV2 is Initializable, OwnableUpgradeable {
+contract PlunderFeeBatchV2 is Initializable, OwnableUpgradeable {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     IERC20Upgradeable public wNative;
@@ -48,9 +48,9 @@ contract BeefyFeeBatchV2 is Initializable, OwnableUpgradeable {
     function initialize(
         address _bifi,
         address _wNative,
-        address _treasury, 
-        address _rewardPool, 
-        address _unirouter 
+        address _treasury,
+        address _rewardPool,
+        address _unirouter
     ) public initializer {
         __Ownable_init();
 
@@ -65,11 +65,11 @@ contract BeefyFeeBatchV2 is Initializable, OwnableUpgradeable {
         if (_unirouter != address(0x0)) {
             _initRouter(_unirouter);
         }
-        
+
         wNativeToBifiRoute = [_wNative, _bifi];
     }
 
-    // Main function. Divides Beefy's profits.
+    // Main function. Divides Plunder's profits.
     function harvest() public {
         uint256 wNativeBal = wNative.balanceOf(address(this));
 
@@ -115,7 +115,7 @@ contract BeefyFeeBatchV2 is Initializable, OwnableUpgradeable {
 
         wNative.safeApprove(_unirouter, type(uint).max);
         wNative.safeApprove(unirouter, 0);
-        
+
         unirouter = _unirouter;
     }
 
@@ -133,7 +133,7 @@ contract BeefyFeeBatchV2 is Initializable, OwnableUpgradeable {
         treasuryFee = _fee;
         rewardPoolFee = MAX_FEE - treasuryFee;
     }
-    
+
     // Rescue locked funds sent by mistake
     function inCaseTokensGetStuck(address _token, address _recipient) external onlyOwner {
         require(_token != address(wNative), "!safe");

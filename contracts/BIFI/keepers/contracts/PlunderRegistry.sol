@@ -12,7 +12,7 @@ import "../interfaces/IPlunderVault.sol";
 import "../interfaces/IPlunderStrategy.sol";
 import "../interfaces/IPlunderRegistry.sol";
 
-contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
+contract PlunderRegistry is ManageableUpgradeable, IPlunderRegistry {
     using SafeERC20Upgradeable for IERC20Upgradeable;
     using EnumerableSetUpgradeable for EnumerableSetUpgradeable.AddressSet;
 
@@ -50,8 +50,8 @@ contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
     function _addVault(address _vaultAddress) internal {
         require(!_isVaultInRegistry(_vaultAddress), "Vault Exists");
 
-        IBeefyVault vault = IBeefyVault(_vaultAddress);
-        IBeefyStrategy strat = _validateVault(vault);
+        IPlunderVault vault = IPlunderVault(_vaultAddress);
+        IPlunderStrategy strat = _validateVault(vault);
 
         address[] memory tokens = _collectTokenData(strat);
 
@@ -66,18 +66,18 @@ contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
         _vaultInfoMap[_vaultAddress].index = _vaultSet.length() - 1;
     }
 
-    function _validateVault(IBeefyVault _vault) internal view returns (IBeefyStrategy strategy) {
+    function _validateVault(IPlunderVault _vault) internal view returns (IPlunderStrategy strategy) {
         address vaultAddress = address(_vault);
 
-        try _vault.strategy() returns (IBeefyStrategy _strategy) {
-            require(IBeefyStrategy(_strategy).vault() == vaultAddress, "Vault/Strat Mismatch");
-            return IBeefyStrategy(_strategy);
+        try _vault.strategy() returns (IPlunderStrategy _strategy) {
+            require(IPlunderStrategy(_strategy).vault() == vaultAddress, "Vault/Strat Mismatch");
+            return IPlunderStrategy(_strategy);
         } catch {
             require(false, "Address not a Vault");
         }
     }
 
-    function _collectTokenData(IBeefyStrategy _strategy) internal view returns (address[] memory tokens) {
+    function _collectTokenData(IPlunderStrategy _strategy) internal view returns (address[] memory tokens) {
         try _strategy.lpToken0() returns (address lpToken0) {
             tokens = new address[](3);
 
@@ -101,7 +101,7 @@ contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
         view
         returns (
             string memory name_,
-            IBeefyStrategy strategy_,
+            IPlunderStrategy strategy_,
             bool isPaused_,
             address[] memory tokens_,
             uint256 blockNumber_,
@@ -111,11 +111,11 @@ contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
     {
         require(_isVaultInRegistry(_vaultAddress), "Invalid Vault Address");
 
-        IBeefyVault vault = IBeefyVault(_vaultAddress);
+        IPlunderVault vault = IPlunderVault(_vaultAddress);
         VaultInfo memory vaultInfo = _vaultInfoMap[_vaultAddress];
 
         name_ = vault.name();
-        strategy_ = IBeefyStrategy(vault.strategy());
+        strategy_ = IPlunderStrategy(vault.strategy());
         isPaused_ = strategy_.paused();
         tokens_ = vaultInfo.tokens;
         blockNumber_ = vaultInfo.blockNumber;
@@ -140,14 +140,14 @@ contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
         uint256 numResults;
 
         for (uint256 vid; vid < _vaultSet.length(); vid++) {
-            if (IBeefyVault(_vaultSet.at(vid)).balanceOf(_address) > 0) {
+            if (IPlunderVault(_vaultSet.at(vid)).balanceOf(_address) > 0) {
                 numResults++;
             }
         }
 
         stakedVaults = new VaultInfo[](numResults);
         for (uint256 vid; vid < _vaultSet.length(); vid++) {
-            if (IBeefyVault(_vaultSet.at(vid)).balanceOf(_address) > 0) {
+            if (IPlunderVault(_vaultSet.at(vid)).balanceOf(_address) > 0) {
                 stakedVaults[curResults++] = _vaultInfoMap[_vaultSet.at(vid)];
             }
         }

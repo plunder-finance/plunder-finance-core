@@ -12,7 +12,7 @@ interface IGaugeStaker {
     function claimVeWantReward() external;
 }
 
-contract BeefyVeRewardPool is LPTokenWrapper, Ownable {
+contract PlunderVeRewardPool is LPTokenWrapper, Ownable {
     IERC20 public rewardToken;
     uint256 public constant DURATION = 7 days;
 

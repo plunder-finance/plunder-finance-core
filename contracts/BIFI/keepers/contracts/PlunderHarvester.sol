@@ -18,18 +18,18 @@ import "../interfaces/IUpkeepRefunder.sol";
 
 import "../libraries/UpkeepLibrary.sol";
 
-contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
+contract PlunderHarvester is ManageableUpgradeable, IPlunderHarvester {
     using SafeERC20Upgradeable for IERC20Upgradeable;
 
     // Contracts.
-    IBeefyRegistry public _vaultRegistry;
+    IPlunderRegistry public _vaultRegistry;
     IKeeperRegistry public _keeperRegistry;
     IUpkeepRefunder public _upkeepRefunder;
 
     // Configuration state variables.
     uint256 public _performUpkeepGasLimit;
     uint256 public _performUpkeepGasLimitBuffer;
-    uint256 public _vaultHarvestFunctionGasOverhead; // Estimated average gas cost of calling harvest(). TODO: this needs to live in BeefyRegistry, and needs to be a `per vault` number.
+    uint256 public _vaultHarvestFunctionGasOverhead; // Estimated average gas cost of calling harvest(). TODO: this needs to live in PlunderRegistry, and needs to be a `per vault` number.
     uint256 public _keeperRegistryGasOverhead; // Gas cost of upstream contract that calls performUpkeep(). This is a private variable on KeeperRegistry.
     uint256 public _chainlinkUpkeepTxPremiumFactor; // Tx premium factor/multiplier scaled by 1 gwei (10**9).
     address public _callFeeRecipient;
@@ -53,7 +53,7 @@ contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
         __Manageable_init();
 
         // Set contract references.
-        _vaultRegistry = IBeefyRegistry(vaultRegistry_);
+        _vaultRegistry = IPlunderRegistry(vaultRegistry_);
         _keeperRegistry = IKeeperRegistry(keeperRegistry_);
         _upkeepRefunder = IUpkeepRefunder(upkeepRefunder_);
 
@@ -95,7 +95,7 @@ contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
             uint256 numberOfVaultsToHarvest,
             uint256 newStartIndex
         ) = _countVaultsToHarvest(vaults);
-        if (numberOfVaultsToHarvest == 0) return (false, bytes("BeefyAutoHarvester: No vaults to harvest"));
+        if (numberOfVaultsToHarvest == 0) return (false, bytes("PlunderAutoHarvester: No vaults to harvest"));
 
         (
             address[] memory vaultsToHarvest,
@@ -212,8 +212,8 @@ contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
     }
 
     function _canHarvestVault(address vaultAddress_) internal view returns (bool canHarvest_) {
-        IBeefyVault vault = IBeefyVault(vaultAddress_);
-        IBeefyStrategy strategy = IBeefyStrategy(vault.strategy());
+        IPlunderVault vault = IPlunderVault(vaultAddress_);
+        IPlunderStrategy strategy = IPlunderStrategy(vault.strategy());
 
         bool isPaused = strategy.paused();
 
@@ -231,8 +231,8 @@ contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
             uint256 callRewardAmount_
         )
     {
-        IBeefyVault vault = IBeefyVault(vaultAddress_);
-        IBeefyStrategy strategy = IBeefyStrategy(vault.strategy());
+        IPlunderVault vault = IPlunderVault(vaultAddress_);
+        IPlunderStrategy strategy = IPlunderStrategy(vault.strategy());
 
         /* solhint-disable not-rely-on-time */
         uint256 oneDayAgo = block.timestamp - 1 days;
@@ -241,7 +241,7 @@ contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
 
         callRewardAmount_ = strategy.callReward();
 
-        uint256 vaultHarvestGasOverhead = _estimateSingleVaultHarvestGasOverhead(_vaultHarvestFunctionGasOverhead); // TODO: Pull this number from BeefyRegistry.
+        uint256 vaultHarvestGasOverhead = _estimateSingleVaultHarvestGasOverhead(_vaultHarvestFunctionGasOverhead); // TODO: Pull this number from PlunderRegistry.
         txCostWithPremium_ = _calculateTxCostWithPremium(vaultHarvestGasOverhead);
         bool isProfitableHarvest = callRewardAmount_ >= txCostWithPremium_;
 
@@ -400,7 +400,7 @@ contract BeefyHarvester is ManageableUpgradeable, IBeefyHarvester {
     }
 
     function _harvestVault(address vault_) internal returns (bool didHarvest_, uint256 callRewards_) {
-        IBeefyStrategy strategy = IBeefyStrategy(IBeefyVault(vault_).strategy());
+        IPlunderStrategy strategy = IPlunderStrategy(IPlunderVault(vault_).strategy());
         callRewards_ = strategy.callReward();
         try strategy.harvest(_callFeeRecipient) {
             didHarvest_ = true;

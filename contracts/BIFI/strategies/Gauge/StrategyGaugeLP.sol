@@ -25,7 +25,7 @@ contract StrategyGaugeLP is StratManager, FeeManager, GasThrottler {
     address public lpToken0;
     address public lpToken1;
 
-    // Beefy Gauge Staker
+    // Plunder Gauge Staker
     address public gaugeStaker;
 
     // Third party contracts

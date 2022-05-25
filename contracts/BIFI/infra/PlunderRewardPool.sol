@@ -6,7 +6,7 @@ import "@openzeppelin-2/contracts/ownership/Ownable.sol";
 
 import "../utils/LPTokenWrapper.sol";
 
-contract BeefyRewardPool is LPTokenWrapper, Ownable {
+contract PlunderRewardPool is LPTokenWrapper, Ownable {
     IERC20 public rewardToken;
     uint256 public constant DURATION = 1 days;
 

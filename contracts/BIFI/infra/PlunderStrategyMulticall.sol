@@ -4,7 +4,7 @@ pragma solidity ^0.6.12;
 
 import "../interfaces/plunder/IVault.sol";
 
-contract BeefyStrategyMulticall {
+contract PlunderStrategyMulticall {
 
     function getStrategy(address[] calldata vaults) external view returns (address[] memory) {
         address[] memory strategies = new address[](vaults.length);

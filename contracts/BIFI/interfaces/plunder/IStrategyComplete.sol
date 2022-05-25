@@ -24,7 +24,7 @@ interface IStrategyComplete {
     function setKeeper(address) external;
     function unirouter() external view returns (address);
     function plunderFeeRecipient() external view returns (address);
-    function setBeefyFeeRecipient(address) external;
+    function setPlunderFeeRecipient(address) external;
     function strategist() external view returns (address);
     function setStrategist(address) external;
 }
