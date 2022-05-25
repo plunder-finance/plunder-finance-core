@@ -8,9 +8,9 @@ import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeab
 
 import "./ManageableUpgradeable.sol";
 
-import "../interfaces/IBeefyRegistry.sol";
-import "../interfaces/IBeefyVault.sol";
-import "../interfaces/IBeefyStrategyEthCall.sol";
+import "../interfaces/IPlunderRegistry.sol";
+import "../interfaces/IPlunderVault.sol";
+import "../interfaces/IPlunderStrategyEthCall.sol";
 import "@chainlink/contracts/src/v0.8/interfaces/KeeperCompatibleInterface.sol";
 
 import "../libraries/UpkeepLibrary.sol";
@@ -55,7 +55,7 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
         if (_lastUpdateCycle > oneWeekAgo) {
             // only run once a week
             return (false, bytes("VaultGasOverheadAnalyzer: Ran less than 1 week ago."));
-        } 
+        }
 
         // Get all vault addresses.
         address[] memory vaults = _vaultRegistry.allVaultAddresses();
@@ -159,7 +159,7 @@ contract VaultGasOverheadAnalyzer is ManageableUpgradeable, KeeperCompatibleInte
         if (didHarvest_) {
             _vaultRegistry.setHarvestFunctionGasOverhead(vaultAddress, gasOverhead_);
         }
-        
+
         // Update index
         _index = UpkeepLibrary._getCircularIndex(currentIndex_, 1, vaults.length);
 

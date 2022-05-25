@@ -8,9 +8,9 @@ import "@openzeppelin/contracts-upgradeable/utils/structs/EnumerableSetUpgradeab
 
 import "./ManageableUpgradeable.sol";
 
-import "../interfaces/IBeefyVault.sol";
-import "../interfaces/IBeefyStrategy.sol";
-import "../interfaces/IBeefyRegistry.sol";
+import "../interfaces/IPlunderVault.sol";
+import "../interfaces/IPlunderStrategy.sol";
+import "../interfaces/IPlunderRegistry.sol";
 
 contract BeefyRegistry is ManageableUpgradeable, IBeefyRegistry {
     using SafeERC20Upgradeable for IERC20Upgradeable;

@@ -10,10 +10,10 @@ import "./ManageableUpgradeable.sol";
 import "../../interfaces/common/IUniswapRouterETH.sol";
 import "../interfaces/IPegSwap.sol";
 import "../interfaces/IKeeperRegistry.sol";
-import "../interfaces/IBeefyVault.sol";
-import "../interfaces/IBeefyStrategy.sol";
-import "../interfaces/IBeefyRegistry.sol";
-import "../interfaces/IBeefyHarvester.sol";
+import "../interfaces/IPlunderVault.sol";
+import "../interfaces/IPlunderStrategy.sol";
+import "../interfaces/IPlunderRegistry.sol";
+import "../interfaces/IPlunderHarvester.sol";
 import "../interfaces/IUpkeepRefunder.sol";
 
 import "../libraries/UpkeepLibrary.sol";

@@ -1,7 +1,7 @@
 // SPDX-License-Identifier: MIT
 pragma solidity >=0.6.0 <0.9.0;
 import "@openzeppelin/contracts-upgradeable/token/ERC20/IERC20Upgradeable.sol";
-import "./IBeefyStrategy.sol";
+import "./IPlunderStrategy.sol";
 
 interface IBeefyVault is IERC20Upgradeable {
     function name() external view returns (string memory);
