@@ -6,7 +6,7 @@ import "@openzeppelin-2/contracts/math/SafeMath.sol";
 import "@openzeppelin-2/contracts/token/ERC20/SafeERC20.sol";
 import "@openzeppelin-2/contracts/ownership/Ownable.sol";
 
-import "./BeefyLaunchpool.sol";
+import "./PlunderLaunchpool.sol";
 
 interface IMooVault {
     function want() external view returns (address);

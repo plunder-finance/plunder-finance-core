@@ -4,7 +4,7 @@ pragma solidity ^0.5.0;
 
 import "@openzeppelin-2/contracts/ownership/Ownable.sol";
 
-import "./BeefyLaunchpoolReceiver.sol";
+import "./PlunderLaunchpoolReceiver.sol";
 
 contract LaunchpoolReceiverFactory is Ownable {
 
