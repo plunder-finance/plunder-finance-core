@@ -9,17 +9,17 @@ const TIMEOUT = 10 * 60 * 1000000;
 
 const chainName = "bsc";
 const chainData = addressBook[chainName];
-const { beefyfinance } = chainData.platforms;
+const { plunderfinance } = chainData.platforms;
 
 const config = {
   vault: "0x42376cd79F916Fdae6225Dd647f154D055165d83",
-  vaultContract: "BeefyVaultV6",
+  vaultContract: "PlunderVaultV6",
   strategyContract: "StrategyCommonChefLP",
   testAmount: ethers.utils.parseEther("5"),
   wnative: chainData.tokens.WNATIVE.address,
-  keeper: beefyfinance.keeper,
-  strategyOwner: beefyfinance.strategyOwner,
-  vaultOwner: beefyfinance.vaultOwner,
+  keeper: plunderfinance.keeper,
+  strategyOwner: plunderfinance.strategyOwner,
+  vaultOwner: plunderfinance.vaultOwner,
 };
 
 describe("VaultLifecycleTest", () => {

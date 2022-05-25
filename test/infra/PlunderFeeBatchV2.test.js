@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-describe("BeefyFeeBatchV2", () => {
+describe("PlunderFeeBatchV2", () => {
   const { provider } = ethers;
 
   const setup = async () => {
@@ -9,7 +9,7 @@ describe("BeefyFeeBatchV2", () => {
     const Token = await ethers.getContractFactory("TestToken");
     const token = await Token.deploy("10000", "Test Token", "TEST");
 
-    const Treasury = await ethers.getContractFactory("BeefyTreasury");
+    const Treasury = await ethers.getContractFactory("PlunderTreasury");
     const treasury = await Treasury.deploy();
 
     return { signer, other, token, treasury };

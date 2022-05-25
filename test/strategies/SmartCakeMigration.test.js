@@ -44,7 +44,7 @@ describe("Migrate SmartCake", () => {
 
   const mockOldArch = async ({ signer }) => {
     const { vault, strategy } = await deployVault({
-      vault: "BeefyVaultV3",
+      vault: "PlunderVaultV3",
       strategy: "StrategyCake",
       want: CAKE,
       mooName: "Moo Smart Cake",
@@ -61,7 +61,7 @@ describe("Migrate SmartCake", () => {
   const mockSimpleArch = async ({ signer }) => {
     const workers = {
       simple: await deployVault({
-        vault: "BeefyVaultV3",
+        vault: "PlunderVaultV3",
         strategy: "StrategyCake",
         want: CAKE,
         mooName: "Worker Simple",
@@ -74,7 +74,7 @@ describe("Migrate SmartCake", () => {
     };
 
     const { vault, strategy } = await deployVault({
-      vault: "BeefyVaultV3",
+      vault: "PlunderVaultV3",
       strategy: "YieldBalancer",
       want: CAKE,
       mooName: "Yield Balancer",
@@ -91,7 +91,7 @@ describe("Migrate SmartCake", () => {
   const mockNewArch = async ({ signer }) => {
     const workers = {
       simple: await deployVault({
-        vault: "BeefyVaultV3",
+        vault: "PlunderVaultV3",
         strategy: "StrategyCake",
         want: CAKE,
         mooName: "Worker Simple",
@@ -103,7 +103,7 @@ describe("Migrate SmartCake", () => {
       }),
 
       syrupA: await deployVault({
-        vault: "BeefyVaultV3",
+        vault: "PlunderVaultV3",
         strategy: "StrategySyrup",
         want: CAKE,
         mooName: "Worker Syrup A",
@@ -115,7 +115,7 @@ describe("Migrate SmartCake", () => {
       }),
 
       syrupB: await deployVault({
-        vault: "BeefyVaultV3",
+        vault: "PlunderVaultV3",
         strategy: "StrategySyrup",
         want: CAKE,
         mooName: "Worker Syrup B",
@@ -128,7 +128,7 @@ describe("Migrate SmartCake", () => {
     };
 
     const { vault, strategy } = await deployVault({
-      vault: "BeefyVaultV3",
+      vault: "PlunderVaultV3",
       strategy: "YieldBalancer",
       want: CAKE,
       mooName: "Yield Balancer",

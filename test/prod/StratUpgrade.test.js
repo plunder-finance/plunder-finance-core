@@ -20,7 +20,7 @@ describe("StratUpgrade", () => {
   before(async () => {
     [deployer, keeper, upgrader] = await ethers.getSigners();
 
-    vault = await ethers.getContractAt("BeefyVaultV6", config.vault);
+    vault = await ethers.getContractAt("PlunderVaultV6", config.vault);
 
     const strategyAddr = await vault.strategy();
     const stratCandidate = await vault.stratCandidate();
@@ -48,9 +48,9 @@ describe("StratUpgrade", () => {
   });
 
   it("New strat has the correct admin accounts", async () => {
-    const { beefyfinance } = addressBook[chainName].platforms;
-    expect(await candidate.keeper()).to.equal(beefyfinance.keeper);
-    expect(await candidate.owner()).to.equal(beefyfinance.strategyOwner);
+    const { plunderfinance } = addressBook[chainName].platforms;
+    expect(await candidate.keeper()).to.equal(plunderfinance.keeper);
+    expect(await candidate.owner()).to.equal(plunderfinance.strategyOwner);
   }).timeout(TIMEOUT);
 
   it("Upgrades correctly", async () => {

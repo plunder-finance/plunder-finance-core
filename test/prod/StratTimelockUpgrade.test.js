@@ -20,7 +20,7 @@ const config = {
   batch: false,
   testAmount: ethers.utils.parseEther("1"),
   wnative: addressBook[chainName].tokens.WNATIVE.address,
-  timelock: addressBook[chainName].platforms.beefyfinance.vaultOwner,
+  timelock: addressBook[chainName].platforms.plunderfinance.vaultOwner,
 };
 
 describe("StratUpgrade", function () {
@@ -31,7 +31,7 @@ describe("StratUpgrade", function () {
   before(async () => {
     [deployer, keeper, upgrader, rewarder] = await ethers.getSigners();
 
-    vault = await ethers.getContractAt("BeefyVaultV6", config.vault);
+    vault = await ethers.getContractAt("PlunderVaultV6", config.vault);
 
     const strategyAddr = await vault.strategy();
     const stratCandidate = await vault.stratCandidate();
@@ -66,9 +66,9 @@ describe("StratUpgrade", function () {
   });
 
   it("New strat has the correct admin accounts", async () => {
-    const { beefyfinance } = addressBook[chainName].platforms;
-    expect(await candidate.keeper()).to.equal(beefyfinance.keeper);
-    expect(await candidate.owner()).to.equal(beefyfinance.strategyOwner);
+    const { plunderfinance } = addressBook[chainName].platforms;
+    expect(await candidate.keeper()).to.equal(plunderfinance.keeper);
+    expect(await candidate.owner()).to.equal(plunderfinance.strategyOwner);
   });
 
   // it("Upgrades correctly", async () => {

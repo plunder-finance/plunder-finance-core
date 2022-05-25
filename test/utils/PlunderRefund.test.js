@@ -1,6 +1,6 @@
 const { expect } = require("chai");
 
-describe("BeefyRefund", () => {
+describe("PlunderRefund", () => {
   const pricePerFullShare = ethers.BigNumber.from("1500000000000000000");
   const burnAddr = "0x000000000000000000000000000000000000dEaD";
 
@@ -11,47 +11,47 @@ describe("BeefyRefund", () => {
     const token = await Token.deploy("10000", "Test Token", "TEST");
     const mootoken = await Token.deploy("10000", "Test Moo Token", "mooTEST");
 
-    const BeefyRefund = await ethers.getContractFactory("BeefyRefund");
-    const beefyRefund = await BeefyRefund.deploy(token.address, mootoken.address, pricePerFullShare);
+    const PlunderRefund = await ethers.getContractFactory("PlunderRefund");
+    const plunderRefund = await PlunderRefund.deploy(token.address, mootoken.address, pricePerFullShare);
 
-    return { signer, other, token, mootoken, beefyRefund };
+    return { signer, other, token, mootoken, plunderRefund };
   };
 
   it("Initializes the contract correctly", async () => {
-    const { token, mootoken, beefyRefund } = await setup();
+    const { token, mootoken, plunderRefund } = await setup();
 
-    expect(await beefyRefund.token()).to.equal(token.address);
-    expect(await beefyRefund.mootoken()).to.equal(mootoken.address);
-    expect(await beefyRefund.pricePerFullShare()).to.equal(pricePerFullShare);
+    expect(await plunderRefund.token()).to.equal(token.address);
+    expect(await plunderRefund.mootoken()).to.equal(mootoken.address);
+    expect(await plunderRefund.pricePerFullShare()).to.equal(pricePerFullShare);
   });
 
   it("Refunds nothing if you send it 0 shares", async () => {
-    const { other, token, beefyRefund } = await setup();
-    await token.transfer(beefyRefund.address, 150);
+    const { other, token, plunderRefund } = await setup();
+    await token.transfer(plunderRefund.address, 150);
 
-    const balanceBefore = await token.balanceOf(beefyRefund.address);
-    await beefyRefund.connect(other).refund();
-    const balanceAfter = await token.balanceOf(beefyRefund.address);
+    const balanceBefore = await token.balanceOf(plunderRefund.address);
+    await plunderRefund.connect(other).refund();
+    const balanceAfter = await token.balanceOf(plunderRefund.address);
 
     expect(balanceBefore).to.equal(balanceAfter);
   });
 
   it("Refunds the correct number of token per share", async () => {
-    const { other, token, mootoken, beefyRefund } = await setup();
+    const { other, token, mootoken, plunderRefund } = await setup();
     const userShares = 100;
-    await token.transfer(beefyRefund.address, 500);
+    await token.transfer(plunderRefund.address, 500);
     await mootoken.transfer(other.address, userShares);
 
     const balTokenBefore = await token.balanceOf(other.address);
     const balMootokenBefore = await mootoken.balanceOf(other.address);
-    const balRefunderBefore = await token.balanceOf(beefyRefund.address);
+    const balRefunderBefore = await token.balanceOf(plunderRefund.address);
 
-    await mootoken.connect(other).approve(beefyRefund.address, userShares);
-    await beefyRefund.connect(other).refund();
+    await mootoken.connect(other).approve(plunderRefund.address, userShares);
+    await plunderRefund.connect(other).refund();
 
     const balTokenAfter = await token.balanceOf(other.address);
     const balMootokenAfter = await mootoken.balanceOf(other.address);
-    const balRefunderAfter = await token.balanceOf(beefyRefund.address);
+    const balRefunderAfter = await token.balanceOf(plunderRefund.address);
 
     const expectedRefund = pricePerFullShare.mul(userShares).div("1000000000000000000");
     expect(balTokenAfter).to.equal(balTokenBefore.add(expectedRefund));
@@ -60,16 +60,16 @@ describe("BeefyRefund", () => {
   });
 
   it("Burns the shares by sending them to 0xdead", async () => {
-    const { other, token, mootoken, beefyRefund } = await setup();
+    const { other, token, mootoken, plunderRefund } = await setup();
     const userShares = 100;
-    await token.transfer(beefyRefund.address, 500);
+    await token.transfer(plunderRefund.address, 500);
     await mootoken.transfer(other.address, userShares);
 
     const balMooBefore = await mootoken.balanceOf(other.address);
     const balBurnBefore = await mootoken.balanceOf(burnAddr);
 
-    await mootoken.connect(other).approve(beefyRefund.address, userShares);
-    await beefyRefund.connect(other).refund();
+    await mootoken.connect(other).approve(plunderRefund.address, userShares);
+    await plunderRefund.connect(other).refund();
 
     const balMooAfter = await mootoken.balanceOf(other.address);
     const balBurnAfter = await mootoken.balanceOf(burnAddr);

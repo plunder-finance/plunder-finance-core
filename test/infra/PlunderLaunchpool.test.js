@@ -3,7 +3,7 @@ const { expect } = require("chai");
 const DURATION = 864000;
 const TIMEOUT = 10 * 60 * 1000;
 
-describe("BeefyLaunchpool", async () => {
+describe("PlunderLaunchpool", async () => {
   const setup = async () => {
     const [signer, other] = await ethers.getSigners();
 
@@ -12,7 +12,7 @@ describe("BeefyLaunchpool", async () => {
     const rewardToken = await Token.deploy("10000", "Reward Token", "REWARD");
     const otherToken = await Token.deploy("10000", "Other Token", "OTHER");
 
-    const Pool = await ethers.getContractFactory("BeefyLaunchpool");
+    const Pool = await ethers.getContractFactory("PlunderLaunchpool");
     const pool = await Pool.deploy(stakedToken.address, rewardToken.address, DURATION);
 
     return { signer, other, pool, stakedToken, rewardToken, otherToken };

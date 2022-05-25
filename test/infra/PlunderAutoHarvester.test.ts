@@ -5,7 +5,7 @@ import { delay } from "../../utils/timeHelpers";
 
 import { addressBook } from "blockchain-addressbook";
 
-import { BeefyHarvester, BeefyUniV2Zap, BeefyRegistry, IUniswapRouterETH, IWrappedNative, StrategyCommonChefLP, UpkeepRefunder } from "../../typechain-types";
+import { PlunderHarvester, PlunderUniV2Zap, PlunderRegistry, IUniswapRouterETH, IWrappedNative, StrategyCommonChefLP, UpkeepRefunder } from "../../typechain-types";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { CallOverrides } from "ethers";
 import { startingEtherPerAccount } from "../../utils/configInit";
@@ -20,19 +20,19 @@ const fundsPerTestcase = totalTestcaseFundsScaledDown.div(numberOfTestcases);
 
 const chainName = "polygon";
 const chainData = addressBook[chainName];
-const { beefyfinance } = chainData.platforms;
+const { plunderfinance } = chainData.platforms;
 
 const config = {
   harvester: {
-    name: "BeefyHarvester",
+    name: "PlunderHarvester",
     address: "0x9F58E3D18b2E156d4E9cB26C2aAEA58fcDf9fA34", // change this
   },
   vaultRegistry: {
-    name: "BeefyRegistry",
+    name: "PlunderRegistry",
     address: "0x820cE73c7F15C2b828aBE79670D7e61731AB93Be", // TODO: get all of these from address book
   },
   zap: {
-    name: "BeefyUniV2Zap",
+    name: "PlunderUniV2Zap",
     address: "0x540A9f99bB730631BF243a34B19fd00BA8CF315C", // TODO: add this to the vaultRegistry
   },
   unirouter: {
@@ -65,10 +65,10 @@ const testData: TestData = {
   },
 };
 
-describe("BeefyHarvester", () => {
-  let harvester: BeefyHarvester;
-  let vaultRegistry: BeefyRegistry;
-  let zap: BeefyUniV2Zap;
+describe("PlunderHarvester", () => {
+  let harvester: PlunderHarvester;
+  let vaultRegistry: PlunderRegistry;
+  let zap: PlunderUniV2Zap;
   let unirouter: IUniswapRouterETH;
   let wrappedNative: IWrappedNative
 
@@ -80,17 +80,17 @@ describe("BeefyHarvester", () => {
     harvester = (await ethers.getContractAt(
       config.harvester.name,
       config.harvester.address
-    )) as unknown as BeefyHarvester;
+    )) as unknown as PlunderHarvester;
 
     vaultRegistry = (await ethers.getContractAt(
       config.vaultRegistry.name,
       config.vaultRegistry.address
-    )) as unknown as BeefyRegistry;
+    )) as unknown as PlunderRegistry;
 
     zap = (await ethers.getContractAt(
       config.zap.name,
       config.zap.address
-    )) as unknown as BeefyUniV2Zap;
+    )) as unknown as PlunderUniV2Zap;
 
     unirouter = (await ethers.getContractAt(
       config.unirouter.name,

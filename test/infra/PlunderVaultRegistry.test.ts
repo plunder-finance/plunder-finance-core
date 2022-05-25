@@ -5,18 +5,18 @@ import { delay } from "../../utils/timeHelpers";
 
 import { addressBook } from "blockchain-addressbook";
 
-import { BeefyVaultRegistry } from "../../typechain-types";
+import { PlunderVaultRegistry } from "../../typechain-types";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 const TIMEOUT = 10 * 60 * 100000;
 
 const chainName = "polygon";
 const chainData = addressBook[chainName];
-const { beefyfinance } = chainData.platforms;
+const { plunderfinance } = chainData.platforms;
 
 const config = {
   registry: {
-    name: "BeefyVaultRegistry",
+    name: "PlunderVaultRegistry",
     address: "0xd4155C58e24866DD0F0588bB8423bEE3A25E692E",
   },
 };
@@ -35,8 +35,8 @@ const testData = {
   },
 };
 
-describe("BeefyVaultRegistry", () => {
-  let registry: BeefyVaultRegistry;
+describe("PlunderVaultRegistry", () => {
+  let registry: PlunderVaultRegistry;
   let deployer: SignerWithAddress, keeper: SignerWithAddress, other: SignerWithAddress;
 
   beforeEach(async () => {
@@ -45,7 +45,7 @@ describe("BeefyVaultRegistry", () => {
     registry = (await ethers.getContractAt(
       config.registry.name,
       config.registry.address
-    )) as unknown as BeefyVaultRegistry;
+    )) as unknown as PlunderVaultRegistry;
   });
 
   it("adds vaults to the registry.", async () => {
