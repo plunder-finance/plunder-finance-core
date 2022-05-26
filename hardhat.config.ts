@@ -1,9 +1,12 @@
+// @ts-nocheck
 import "@nomiclabs/hardhat-waffle";
 import "@nomiclabs/hardhat-web3";
 import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@openzeppelin/hardhat-upgrades";
+import '@nomiclabs/hardhat-truffle5';
 import "@typechain/hardhat";
+import { task } from "hardhat/config";
 import "./tasks";
 
 import { HardhatUserConfig } from "hardhat/src/types/config";
@@ -11,17 +14,30 @@ import { HardhatUserConfig as WithEtherscanConfig } from "hardhat/config";
 import { buildHardhatNetworkAccounts, getPKs } from "./utils/configInit";
 import { ethers } from "ethers";
 
+const ether = n => `${n}${'0'.repeat(18)}`;
+
 type DeploymentConfig = HardhatUserConfig & WithEtherscanConfig;
 
 const accounts = getPKs();
 const hardhatNetworkAccounts = buildHardhatNetworkAccounts(accounts);
+
+
+task('test', async (_, hre, runSuper) => {
+  hre.accounts = await hre.web3.eth.getAccounts();
+  const testFiles = _.testFiles.length ? _.testFiles : ['./test/index.js'];
+  await runSuper({ testFiles });
+});
 
 const config: DeploymentConfig = {
   defaultNetwork: "hardhat",
   networks: {
     hardhat: {
       // accounts visible to hardhat network used by `hardhat node --fork` (yarn net <chainName>)
-      accounts: hardhatNetworkAccounts,
+      // accounts: hardhatNetworkAccounts,
+      accounts: {
+        count: 100,
+        accountsBalance: ether(1000000000),
+      },
     },
     bsc: {
       url: process.env.BSC_RPC || "https://bsc-dataseed2.defibit.io/",

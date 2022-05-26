@@ -12,7 +12,7 @@ interface IRewardPool {
     function transferOwnership(address owner) external;
 }
 
-interface IUniswapRouter {
+interface IUniswapRouterForSwap {
     function swapExactTokensForTokens(
         uint amountIn,
         uint amountOutMin,
@@ -76,7 +76,7 @@ contract PlunderFeeBatchV2 is Initializable, OwnableUpgradeable {
         if (routerInitialized) {
             uint256 treasuryHalf = wNativeBal * treasuryFee / MAX_FEE / 2;
             wNative.safeTransfer(treasury, treasuryHalf);
-            IUniswapRouter(unirouter).swapExactTokensForTokens(treasuryHalf, 0, wNativeToBifiRoute, treasury, block.timestamp);
+            IUniswapRouterForSwap(unirouter).swapExactTokensForTokens(treasuryHalf, 0, wNativeToBifiRoute, treasury, block.timestamp);
         } else {
             uint256 treasuryAmount = wNativeBal * treasuryFee / MAX_FEE;
             wNative.safeTransfer(treasury, treasuryAmount);
