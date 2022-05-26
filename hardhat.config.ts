@@ -195,4 +195,11 @@ const config: DeploymentConfig = {
   },
 };
 
+if (process.env.TEST_ENV_FORK) {
+  console.log({
+    TEST_ENV_FORK: process.env.TEST_ENV_FORK,
+  })
+  config.networks.hardhat.forking = { url: process.env.TEST_ENV_FORK };
+}
+
 export default config;

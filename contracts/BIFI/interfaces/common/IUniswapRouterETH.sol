@@ -43,10 +43,10 @@ interface IUniswapRouterETH {
     ) external returns (uint amountToken, uint amountETH);
 
     function swapExactTokensForTokens(
-        uint amountIn, 
-        uint amountOutMin, 
-        address[] calldata path, 
-        address to, 
+        uint amountIn,
+        uint amountOutMin,
+        address[] calldata path,
+        address to,
         uint deadline
     ) external returns (uint[] memory amounts);
 
@@ -54,10 +54,12 @@ interface IUniswapRouterETH {
         external
         payable
         returns (uint[] memory amounts);
-    
+
     function swapExactTokensForETH(uint amountIn, uint amountOutMin, address[] calldata path, address to, uint deadline)
         external
         returns (uint[] memory amounts);
 
     function getAmountsOut(uint amountIn, address[] calldata path) external view returns (uint[] memory amounts);
+
+    function WETH() external pure returns (address);
 }

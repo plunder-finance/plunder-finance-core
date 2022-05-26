@@ -2,7 +2,7 @@ const { artifacts, web3, accounts, network } = require('hardhat')
 const { ether, time, expectRevert } = require('@openzeppelin/test-helpers')
 const { ADDRESSES: ALL_ADDRESSES } = require('./common')
 
-const IUniswapV2Router02 = artifacts.require('IUniswapRouter')
+const IUniswapV2Router02 = artifacts.require('contracts/BIFI/interfaces/common/IUniswapRouterETH.sol:IUniswapRouterETH')
 const PlunderVault = artifacts.require('PlunderVaultV6')
 const PlunderFinanceTreasury = artifacts.require('PlunderTreasury')
 const IUniV2Pair = artifacts.require('contracts/BIFI/interfaces/common/IUniswapV2Pair.sol:IUniswapV2Pair')
