@@ -1,12 +1,13 @@
 const { artifacts, web3, accounts, network } = require('hardhat')
 const { ether, time, expectRevert } = require('@openzeppelin/test-helpers')
-const { ADDRESSES: ALL_ADDRESSES } = require('./common')
+const { ADDRESSES: ALL_ADDRESSES, impersonateAccount } = require('./common')
 
 const IUniswapV2Router02 = artifacts.require('contracts/BIFI/interfaces/common/IUniswapRouterETH.sol:IUniswapRouterETH')
 const PlunderVault = artifacts.require('PlunderVaultV6')
 const PlunderFinanceTreasury = artifacts.require('PlunderTreasury')
 const IUniV2Pair = artifacts.require('contracts/BIFI/interfaces/common/IUniswapV2Pair.sol:IUniswapV2Pair')
 const StrategyTriMiniChefLP = artifacts.require('StrategyTriMiniChefLP')
+const IERC20 = artifacts.require('@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20')
 
 const [owner, strategist1, keeper1, feeRecipient ] = accounts;
 
@@ -16,6 +17,8 @@ const ADDRESSES = ALL_ADDRESSES.AURORA
 const APPROVAL_DELAY = 60 // seconds
 
 let poolId = 0;
+
+const lpHolder = '0xc8b9a58aadaacc392858ac8c0b8ffe0df4967c84'
 
 describe('deploy and interact with Uni V2 clone Vaults', async function () {
 
@@ -80,5 +83,35 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
       [dexToken, ADDRESSES.USDT], //_outputToLp0Route
       [dexToken] // _outputToLp1Route
     )
+
+    console.log('Impersonate and approve')
+
+    await web3.eth.sendTransaction({
+      to: lpHolder,
+      from: owner,
+      value: ether('500')
+    })
+
+    await impersonateAccount(lpHolder)
+
+
+    const lpTokenERC20 = await IERC20.at(lpToken.address);lpToken
+
+    await lpTokenERC20.approve(vault.address, ether('100000000'), {
+      from: lpHolder
+    })
+
+    const balance = await lpTokenERC20.balanceOf(lpHolder)
+
+    console.log({
+      balance: balance.toString()
+    })
+
+    await vault.deposit(balance, {
+      from: lpHolder
+    })
+
+    console.log('Done.')
+
   })
 })
