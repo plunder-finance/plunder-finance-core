@@ -1,6 +1,6 @@
 const { artifacts, web3, accounts, network } = require('hardhat')
 const { ether, time, expectRevert } = require('@openzeppelin/test-helpers')
-const { ADDRESSES: ALL_ADDRESSES, impersonateAccount } = require('./common')
+const { ADDRESSES: ALL_ADDRESSES, impersonateAccount, getDeployAddressAfter } = require('./common')
 
 const IUniswapV2Router02 = artifacts.require('contracts/BIFI/interfaces/common/IUniswapRouterETH.sol:IUniswapRouterETH')
 const PlunderVault = artifacts.require('PlunderVaultV6')
@@ -39,8 +39,10 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
     })
 
     const treasury = await PlunderFinanceTreasury.new({ from: owner })
+
+    const futureStrategyAddress = await getDeployAddressAfter(1)
     const vault = await PlunderVault.new(
-      lpToken.address,
+      futureStrategyAddress,
       'Plunder Vault: Trisolaris LP BASTION-WNEAR',
       'PV-TRI-LP-BST-WNEAR',
       APPROVAL_DELAY, {
@@ -95,7 +97,7 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
     await impersonateAccount(lpHolder)
 
 
-    const lpTokenERC20 = await IERC20.at(lpToken.address);lpToken
+    const lpTokenERC20 = await IERC20.at(lpToken.address);
 
     await lpTokenERC20.approve(vault.address, ether('100000000'), {
       from: lpHolder

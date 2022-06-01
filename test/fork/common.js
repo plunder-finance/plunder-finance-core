@@ -1,5 +1,7 @@
-const { network, web3, accounts } = require("hardhat");
+const { network, web3, accounts, ethers } = require("hardhat");
 const { ether } = require("@openzeppelin/test-helpers");
+const { getContractAddress } = require('@ethersproject/address')
+
 
 const impersonateAccount = async member => network.provider.request({ method: 'hardhat_impersonateAccount', params: [member] })
 
@@ -24,8 +26,20 @@ const ADDRESSES = {
   }
 }
 
+async function getDeployAddressAfter(txCount) {
+  const [owner] = await ethers.getSigners()
+
+  const transactionCount = await owner.getTransactionCount()
+  const nextAddress = getContractAddress({
+    from: owner.address,
+    nonce: transactionCount + txCount,
+  });
+  return nextAddress;
+}
+
 module.exports = {
   ADDRESSES,
   impersonateAccount,
-  giveEther
+  giveEther,
+  getDeployAddressAfter
 }
