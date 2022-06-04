@@ -6,12 +6,13 @@ import "@nomiclabs/hardhat-etherscan";
 import "@openzeppelin/hardhat-upgrades";
 import '@nomiclabs/hardhat-truffle5';
 import "@typechain/hardhat";
-import { task } from "hardhat/config";
+import { task, subtask } from "hardhat/config";
 import "./tasks";
 
 import { HardhatUserConfig } from "hardhat/src/types/config";
 import { HardhatUserConfig as WithEtherscanConfig } from "hardhat/config";
 import { buildHardhatNetworkAccounts, getPKs } from "./utils/configInit";
+const { TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS } = require("hardhat/builtin-tasks/task-names")
 import { ethers } from "ethers";
 
 const ether = n => `${n}${'0'.repeat(18)}`;
@@ -27,6 +28,33 @@ task('test', async (_, hre, runSuper) => {
   const testFiles = _.testFiles.length ? _.testFiles : ['./test/index.js'];
   await runSuper({ testFiles });
 });
+
+subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS)
+  .setAction(async (_, __, runSuper) => {
+    const paths = await runSuper();
+
+    const filteredPaths = paths.filter(p => {
+
+      const whitelistedPaths = [
+        // 'BIFI/interfaces',
+        'BIFI/interfaces/plunder',
+        'BIFI/interfaces/common',
+        'BIFI/strategies/Aurora',
+        'BIFI/vaults',
+        'BIFI/infra/PlunderTreasury'
+      ]
+
+      for (const whitelistedPath of whitelistedPaths) {
+        if (p.includes(whitelistedPath)) {
+          return true
+        }
+      }
+
+      return false
+    })
+
+    return filteredPaths
+  });
 
 const config: DeploymentConfig = {
   defaultNetwork: "hardhat",
