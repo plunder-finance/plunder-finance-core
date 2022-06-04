@@ -44,7 +44,7 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
     const vault = await PlunderVault.new(
       futureStrategyAddress,
       'Plunder Vault: Trisolaris LP BASTION-WNEAR',
-      'PV-TRI-LP-TRI-USDT',
+      'PV-TRI-LP-BST-WNEAR',
       APPROVAL_DELAY, {
         from: owner
       }
@@ -113,47 +113,7 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
       from: lpHolder
     })
 
-    console.log('Done deposit.')
-
-
-    let harvested, feesCharged, swapped;
-
-    async function harvestAndPrint() {
-      harvested = await strategy.harvested()
-      feesCharged = await strategy.feesCharged()
-      swapped = await strategy.swapped()
-
-      console.log({
-        harvested,
-        feesCharged,
-        swapped
-      })
-
-      const tx = await strategy.harvest()
-      // console.log({
-      //   logs: tx.receipt.rawLogs
-      // })
-
-    }
-
-
-
-    await harvestAndPrint()
-
-    await harvestAndPrint()
-
-    await harvestAndPrint()
-
-
-    harvested = await strategy.harvested()
-    feesCharged = await strategy.feesCharged()
-    swapped = await strategy.swapped()
-
-    console.log({
-      harvested,
-      feesCharged,
-      swapped
-    })
+    console.log('Done.')
 
   })
 })
