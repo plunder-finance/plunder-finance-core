@@ -55,9 +55,10 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
     const want = lpToken.address
 
     const masterChef = ADDRESSES.TRISOLARIS.MASTER_CHEF
-    const dexToken = ADDRESSES.TRISOLARIS.TRI
+    const dexTokenAddress = ADDRESSES.TRISOLARIS.TRI
     const baseLayerToken = wethAddress
 
+    const dexToken = await IERC20.at(dexTokenAddress)
     /*
          address _want,
         uint256 _poolId,
@@ -81,9 +82,9 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
       keeper1,
       strategist1,
       feeRecipient,
-      [dexToken, ADDRESSES.WNEAR, ADDRESSES.WETH], // _outputToNativeRoute
-      [dexToken, ADDRESSES.USDT], //_outputToLp0Route
-      [dexToken] // _outputToLp1Route
+      [dexTokenAddress, ADDRESSES.WNEAR, ADDRESSES.WETH], // _outputToNativeRoute
+      [dexTokenAddress, ADDRESSES.USDT], //_outputToLp0Route
+      [dexTokenAddress] // _outputToLp1Route
     )
 
     console.log('Impersonate and approve')
@@ -136,6 +137,8 @@ describe('deploy and interact with Uni V2 clone Vaults', async function () {
 
     }
 
+
+    await time.increase(60 * 60 * 24)
 
 
     await harvestAndPrint()

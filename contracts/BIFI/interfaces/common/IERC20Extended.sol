@@ -2,6 +2,8 @@
 
 pragma solidity ^0.6.0;
 
-interface IERC20Extended {
+import '@openzeppelin/contracts/token/ERC20/IERC20.sol';
+
+interface IERC20Extended is IERC20 {
     function symbol() external view returns (string memory);
 }
