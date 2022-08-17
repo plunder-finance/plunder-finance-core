@@ -5,6 +5,10 @@ import "@nomiclabs/hardhat-ethers";
 import "@nomiclabs/hardhat-etherscan";
 import "@openzeppelin/hardhat-upgrades";
 import '@nomiclabs/hardhat-truffle5';
+
+require("@matterlabs/hardhat-zksync-deploy");
+require("@matterlabs/hardhat-zksync-solc");
+
 import "@typechain/hardhat";
 import { task, subtask } from "hardhat/config";
 import "./tasks";
@@ -58,6 +62,24 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS)
 
 const config: DeploymentConfig = {
   defaultNetwork: "hardhat",
+  // zksync specific
+  zksolc: {
+    version: "1.1.0",
+    compilerSource: "docker",
+    settings: {
+      optimizer: {
+        enabled: true,
+      },
+      experimental: {
+        dockerImage: "matterlabs/zksolc",
+      },
+    },
+  },
+  zkSyncDeploy: {
+    zkSyncNetwork: "https://zksync2-testnet.zksync.dev",
+    ethNetwork: "goerli", // Can also be the RPC URL of the network (e.g. `https://goerli.infura.io/v3/<API_KEY>`)
+  },
+
   networks: {
     hardhat: {
       // accounts visible to hardhat network used by `hardhat node --fork` (yarn net <chainName>)
@@ -66,6 +88,9 @@ const config: DeploymentConfig = {
         count: 100,
         accountsBalance: ether(1000000000),
       },
+
+      // To compile with zksolc, this must be the default network.
+      zksync: true,
     },
     bsc: {
       url: process.env.BSC_RPC || "https://bsc-dataseed2.defibit.io/",
@@ -136,6 +161,11 @@ const config: DeploymentConfig = {
     aurora: {
       url: process.env.AURORA_RPC || "https://mainnet.aurora.dev/Fon6fPMs5rCdJc4mxX4kiSK1vsKdzc3D8k6UF8aruek",
       chainId: 1313161554,
+      accounts,
+    },
+    neondev: {
+      url: process.env.AURORA_RPC || "https://proxy.devnet.neonlabs.org/solana",
+      chainId: 245022926,
       accounts,
     },
     fuse: {

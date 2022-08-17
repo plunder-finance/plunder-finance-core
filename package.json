@@ -3,6 +3,7 @@
   "version": "0.5.0",
   "private": true,
   "dependencies": {
+    "@matterlabs/hardhat-zksync-deploy": "^0.3.6",
     "@uniswap/lib": "^4.0.1-alpha",
     "@uniswap/v2-core": "^1.0.1",
     "bignumber.js": "^9.0.1",
@@ -47,6 +48,7 @@
   },
   "devDependencies": {
     "@chainlink/contracts": "^0.2.1",
+    "@matterlabs/hardhat-zksync-solc": "^0.3.6",
     "@nomiclabs/hardhat-ethers": "^2.0.2",
     "@nomiclabs/hardhat-etherscan": "^2.1.7",
     "@nomiclabs/hardhat-truffle5": "^2.0.6",
@@ -91,6 +93,7 @@
     "solidity-coverage": "^0.7.17",
     "truffle-flattener": "^1.5.0",
     "typechain": "^6.0.5",
-    "web3": "^1.6.0"
+    "web3": "^1.6.0",
+    "zksync-web3": "^0.7.11"
   }
 }
