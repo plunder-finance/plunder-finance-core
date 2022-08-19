@@ -90,7 +90,7 @@ const config: DeploymentConfig = {
       },
 
       // To compile with zksolc, this must be the default network.
-      zksync: true,
+      zksync: false,
     },
     bsc: {
       url: process.env.BSC_RPC || "https://bsc-dataseed2.defibit.io/",
