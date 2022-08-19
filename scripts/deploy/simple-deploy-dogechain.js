@@ -15,7 +15,7 @@ const IERC20Extended = artifacts.require('IERC20Extended')
 const { deployTrisolarisMiniChefDualLPStrategy } = require('./common');
 
 
-const ADDRESSES = ALL_ADDRESSES.AURORA
+const ADDRESSES = ALL_ADDRESSES.DOGE
 
 const config = {
   want: "0x0E09FaBB73Bd3Ade0a17ECC321fD13a19e81cE82",
@@ -66,17 +66,19 @@ async function main() {
   const strategist1 = accounts[0]
 
   const POOLS = {
-    lpTokenAddress: ADDRESSES.TRISOLARIS.LP_TOKEN_aUSDO_USDT,
-    baseProtocolName: "TRISOLARIS",
-    baseProtocolSymbol: "TRI",
-    masterChef: ADDRESSES.TRISOLARIS.MASTER_CHEF,
-    dexTokenAddress: ADDRESSES.TRISOLARIS.TRI,
-    wrappedBaseLayerTokenAddress: ADDRESSES.WETH,
-    router02Address: ADDRESSES.TRISOLARIS.ROUTER02,
+    lpTokenAddress: ADDRESSES.YODESWAP.LP_TOKEN_WDOGE_USDC,
+    baseProtocolName: "YODESWAP",
+    baseProtocolSymbol: "YODE",
+    masterChef: ADDRESSES.YODESWAP.MASTER_CHEF,
+    dexTokenAddress: ADDRESSES.YODESWAP.DEX_TOKEN,
+    wrappedBaseLayerTokenAddress: ADDRESSES.WWDOGE,
+    router02Address: ADDRESSES.YODESWAP.ROUTER02,
+
+    // ???
     secondaryNativeTokenAddress: ADDRESSES.WNEAR,
     ADDRESSES: {
-      MASTER_CHEF: ADDRESSES.TRISOLARIS.MASTER_CHEF,
-      DEX_TOKEN: ADDRESSES.TRISOLARIS.TRI
+      MASTER_CHEF: ADDRESSES.YODESWAP.MASTER_CHEF,
+      DEX_TOKEN: ADDRESSES.YODESWAP.DEX_TOKEN
     }
   }
 
