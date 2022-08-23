@@ -40,6 +40,7 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS)
         'BIFI/interfaces/plunder',
         'BIFI/interfaces/common',
         'BIFI/strategies/Aurora',
+        'BIFI/strategies/Yode',
         'BIFI/vaults',
         'BIFI/infra/PlunderTreasury'
       ]
