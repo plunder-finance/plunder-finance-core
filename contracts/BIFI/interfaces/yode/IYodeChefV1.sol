@@ -2,7 +2,7 @@
 
 pragma solidity ^0.6.0;
 
-interface IYodeChefV2 {
+interface IYodeChefV1 {
     function deposit(uint256 _pid, uint256 _amount) external;
     function withdraw(uint256 _pid, uint256 _amount) external;
     function userInfo(uint256 _pid, address _user) external view returns (
@@ -13,5 +13,4 @@ interface IYodeChefV2 {
     );
     function emergencyWithdraw(uint256 _pid) external;
     function pendingYode(uint256 _pid, address _user) external view returns (uint256);
-    function rewarder(uint256 pid) external view returns (address);
 }
