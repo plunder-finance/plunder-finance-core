@@ -210,32 +210,51 @@ contract StrategyYodeV2LP is StratManager, FeeManager {
         return _amount;
     }
 
-    function rewardsAvailable() public view returns (uint256, uint256) {
+//    function rewardsAvailable() public view returns (uint256, uint256) {
+//        uint256 outputBal = IYodeChefV2(chef).pendingYode(poolId, address(this));
+//        address rewarder = IYodeChefV2(chef).rewarder(poolId);
+//        uint256 secondBal = ISpookyRewarder(rewarder).pendingToken(poolId, address(this));
+//        return (outputBal, secondBal);
+//    }
+
+    function rewardsAvailable() public view returns (uint256) {
         uint256 outputBal = IYodeChefV2(chef).pendingYode(poolId, address(this));
-        address rewarder = IYodeChefV2(chef).rewarder(poolId);
-        uint256 secondBal = ISpookyRewarder(rewarder).pendingToken(poolId, address(this));
-        return (outputBal, secondBal);
+        return outputBal;
     }
 
-    function callReward() public view returns (uint256) {
-        (uint256 outputBal, uint256 secondBal) = rewardsAvailable();
-        uint256 nativeBal;
+//    function callReward() public view returns (uint256) {
+//        (uint256 outputBal, uint256 secondBal) = rewardsAvailable();
+//        uint256 nativeBal;
+//
+//        try IUniswapRouter(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
+//        returns (uint256[] memory amountOut)
+//        {
+//            nativeBal = nativeBal.add(amountOut[amountOut.length -1]);
+//        }
+//        catch {}
+//
+//        try IUniswapRouter(unirouter).getAmountsOut(secondBal, secondOutputToNativeRoute)
+//        returns (uint256[] memory amountOut)
+//        {
+//            nativeBal = nativeBal.add(amountOut[amountOut.length -1]);
+//        }
+//        catch {}
+//
+//        return nativeBal.mul(45).div(1000).mul(callFee).div(MAX_FEE);
+//    }
 
+    function callReward() public view returns (uint256) {
+        uint256 nativeOut;
+
+        uint256 outputBal = rewardsAvailable();
         try IUniswapRouter(unirouter).getAmountsOut(outputBal, outputToNativeRoute)
         returns (uint256[] memory amountOut)
         {
-            nativeBal = nativeBal.add(amountOut[amountOut.length -1]);
+            nativeOut += amountOut[amountOut.length -1];
         }
         catch {}
 
-        try IUniswapRouter(unirouter).getAmountsOut(secondBal, secondOutputToNativeRoute)
-        returns (uint256[] memory amountOut)
-        {
-            nativeBal = nativeBal.add(amountOut[amountOut.length -1]);
-        }
-        catch {}
-
-        return nativeBal.mul(45).div(1000).mul(callFee).div(MAX_FEE);
+        return nativeOut.mul(45).div(1000).mul(callFee).div(MAX_FEE);
     }
 
     function setHarvestOnDeposit(bool _harvestOnDeposit) external onlyManager {
