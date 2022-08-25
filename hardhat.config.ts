@@ -68,6 +68,11 @@ const config: DeploymentConfig = {
         accountsBalance: ether(1000000000),
       },
     },
+    doge: {
+      url: process.env.DOGE_RPC || "https://rpc01.dogechain.dog",
+      chainId: 2000,
+      accounts,
+    },
     bsc: {
       url: process.env.BSC_RPC || "https://bsc-dataseed2.defibit.io/",
       chainId: 56,

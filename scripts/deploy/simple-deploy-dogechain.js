@@ -12,7 +12,7 @@ const IERC20 = artifacts.require('@openzeppelin/contracts/token/ERC20/IERC20.sol
 const StrategyTriMiniChefDualLP = artifacts.require('StrategyTriMiniChefDualLP')
 const IERC20Extended = artifacts.require('IERC20Extended')
 
-const { deployTrisolarisMiniChefDualLPStrategy } = require('./common');
+const { deployTrisolarisMiniChefDualLPStrategy, deployUniV2ChefV1Strategy } = require('./common');
 
 
 const ADDRESSES = ALL_ADDRESSES.DOGE
@@ -42,7 +42,6 @@ async function deployTreasury (owner) {
   return treasury
 }
 
-
 async function main() {
 
   console.log(`Starting deployment on ${network.name}`)
@@ -65,32 +64,29 @@ async function main() {
   const keeper1 = accounts[0]
   const strategist1 = accounts[0]
 
-  const POOLS = {
-    lpTokenAddress: ADDRESSES.YODESWAP.LP_TOKEN_WDOGE_USDC,
-    baseProtocolName: "YODESWAP",
-    baseProtocolSymbol: "YODE",
-    masterChef: ADDRESSES.YODESWAP.MASTER_CHEF,
-    dexTokenAddress: ADDRESSES.YODESWAP.DEX_TOKEN,
-    wrappedBaseLayerTokenAddress: ADDRESSES.WWDOGE,
-    router02Address: ADDRESSES.YODESWAP.ROUTER02,
-
-    // ???
-    secondaryNativeTokenAddress: ADDRESSES.WNEAR,
-    ADDRESSES: {
-      MASTER_CHEF: ADDRESSES.YODESWAP.MASTER_CHEF,
-      DEX_TOKEN: ADDRESSES.YODESWAP.DEX_TOKEN
+  const POOLS = [
+    {
+      lpTokenAddress: ADDRESSES.YODESWAP.LP_TOKEN_WDOGE_USDC,
+      baseProtocolName: "YODESWAP",
+      baseProtocolSymbol: "YODE",
+      masterChef: ADDRESSES.YODESWAP.MASTER_CHEF,
+      dexTokenAddress: ADDRESSES.YODESWAP.DEX_TOKEN,
+      wrappedBaseLayerTokenAddress: ADDRESSES.WWDOGE,
+      router02Address: ADDRESSES.YODESWAP.ROUTER02,
     }
+  ]
+
+  for (const pool of POOLS) {
+    await deployUniV2ChefV1Strategy(
+      {...pool,
+        owner,
+        treasury,
+        feeRecipient,
+        keeper1,
+        strategist1
+      }
+    )
   }
-
-  await deployTrisolarisMiniChefDualLPStrategy(
-    {...POOLS,
-      owner,
-      treasury,
-      feeRecipient,
-      keeper1,
-      strategist1
-    }
-  )
 }
 
 main()
