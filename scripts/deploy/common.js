@@ -10,7 +10,7 @@ const IUniV2Pair = artifacts.require('contracts/BIFI/interfaces/common/IUniswapV
 // const StrategyTriMiniChefLP = artifacts.require('StrategyTriMiniChefLP')
 const IERC20 = artifacts.require('@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20')
 const StrategyTriMiniChefDualLP = artifacts.require('StrategyTriMiniChefDualLP')
-const
+const StrategyYodeChefLP = artifacts.require('StrategyYodeChefLP')
 const IERC20Extended = artifacts.require('IERC20Extended')
 
 
