@@ -19,9 +19,47 @@ const APPROVAL_DELAY = 60 // seconds
 let poolId = 0
 
 
+
+const poolSample =   {
+  id: 'yode-usdc-wwdoge',
+  name: 'USDC-WWDOGE LP',
+  token: 'USDC-WWDOGE LP',
+  tokenDescription: 'YodeSwap',
+  tokenAddress: '0x8DCeBE9f071562D52b5ABB17235f3bCA768C1e44',
+  tokenDecimals: 18,
+  tokenDescriptionUrl: '#',
+  earnedToken: 'PV-YODE-LP-USDC-WWDOGE',
+  earnedTokenAddress: '0x9Ed787cB8141FD90F1a1e65D1d47b8BAB30061ED',
+  earnContractAddress: '0x9Ed787cB8141FD90F1a1e65D1d47b8BAB30061ED',
+  pricePerFullShare: 1,
+  tvl: 0,
+  oracle: 'lps',
+  oracleId: 'pv-usdc-wdoge',
+  oraclePrice: 0,
+  depositsPaused: false,
+  status: 'active',
+  platform: 'YodeSwap',
+  assets: ['USDC', 'WWDOGE'],
+  risks: [
+    'COMPLEXITY_LOW',
+    'BATTLE_TESTED',
+    'IL_LOW',
+    'MCAP_LARGE',
+    'AUDIT',
+    'CONTRACTS_VERIFIED',
+    'OVER_COLLAT_ALGO_STABLECOIN',
+  ],
+  stratType: 'StratLP',
+  addLiquidityUrl: 'https://app.yodeswap.dog/exchange/add/0x765277EebeCA2e31912C9946eAe1021199B39C61/0xB7ddC6414bf4F5515b52D8BdD69973Ae205ff101',
+  buyTokenUrl:
+    '',
+  createdAt: 1622123567,
+};
+
+
 async function deployUniV2ChefV1Strategy({
-   lpTokenAddress, owner, treasury, feeRecipient, keeper1, strategist1, baseProtocolName, masterChef, dexToken: dexTokenAddress,
-    baseProtocolSymbol, router02Address, wrappedBaseLayerTokenAddress, ADDRESSES }) {
+   lpTokenAddress, owner, treasury, feeRecipient, keeper1, strategist1, baseProtocolName, masterChef, dexTokenAddress,
+    baseProtocolSymbol, router02Address, wrappedBaseLayerTokenAddress }) {
   const uniswapV2Router02 = await IUniswapV2Router02.at(router02Address)
 
   const wethAddress = await uniswapV2Router02.WETH()
@@ -32,6 +70,7 @@ async function deployUniV2ChefV1Strategy({
   const token0Address = await lpToken.token0()
   const token1Address = await lpToken.token1()
   console.log({
+    dexTokenAddress,
     wethAddress,
     token0: token0Address,
     token1: token1Address

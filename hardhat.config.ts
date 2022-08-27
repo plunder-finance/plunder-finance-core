@@ -42,7 +42,8 @@ subtask(TASK_COMPILE_SOLIDITY_GET_SOURCE_PATHS)
         'BIFI/strategies/Aurora',
         'BIFI/strategies/Yode',
         'BIFI/vaults',
-        'BIFI/infra/PlunderTreasury'
+        'BIFI/infra/PlunderTreasury',
+        'BIFI/utils/Multicall',
       ]
 
       for (const whitelistedPath of whitelistedPaths) {
