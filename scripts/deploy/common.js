@@ -204,10 +204,14 @@ async function deployUniV2ChefV1Strategy({
 
   console.log('Done.')
 
-  console.log({
+  const deployment = {
     strategy: strategy.address,
     vault: vault.address
-  })
+  }
+
+  console.log(deployment)
+
+  return deployment
 }
 
 async function deployTrisolarisMiniChefDualLPStrategy

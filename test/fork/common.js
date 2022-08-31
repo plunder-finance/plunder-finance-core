@@ -34,6 +34,10 @@ const ADDRESSES = {
     },
     WWDOGE: '0xb7ddc6414bf4f5515b52d8bdd69973ae205ff101',
     USDC: '0x765277EebeCA2e31912C9946eAe1021199B39C61'
+  },
+  FANTOM: {
+    SPOOKYSWAP: {
+    }
   }
 }
 
