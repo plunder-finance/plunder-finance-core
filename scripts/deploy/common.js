@@ -16,9 +16,6 @@ const IERC20Extended = artifacts.require('IERC20Extended')
 
 const APPROVAL_DELAY = 60 // seconds
 
-let poolId = 0
-
-
 
 const poolSample =   {
   id: 'yode-usdc-wwdoge',
@@ -113,7 +110,7 @@ function getUniV2PoolDescriptor({ vaultAddress, token0Symbol, token1Symbol, plat
 
 async function deployUniV2ChefV1Strategy({
    lpTokenAddress, owner, treasury, feeRecipient, keeper1, strategist1, baseProtocolName, masterChef, dexTokenAddress,
-    baseProtocolSymbol, router02Address, wrappedBaseLayerTokenAddress }) {
+    baseProtocolSymbol, router02Address, wrappedBaseLayerTokenAddress, poolId }) {
   const uniswapV2Router02 = await IUniswapV2Router02.at(router02Address)
 
   const wethAddress = await uniswapV2Router02.WETH()

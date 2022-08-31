@@ -59,6 +59,7 @@ async function main() {
       dexTokenAddress: ADDRESSES.YODESWAP.DEX_TOKEN,
       wrappedBaseLayerTokenAddress: ADDRESSES.WWDOGE,
       router02Address: ADDRESSES.YODESWAP.ROUTER02,
+      poolId: 11
     }
   ]
 

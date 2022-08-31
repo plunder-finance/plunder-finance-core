@@ -124,6 +124,7 @@ async function deployAndDeposit() {
       dexTokenAddress: ADDRESSES.YODESWAP.DEX_TOKEN,
       wrappedBaseLayerTokenAddress: ADDRESSES.WWDOGE,
       router02Address: ADDRESSES.YODESWAP.ROUTER02,
+      poolId: 11
     }
   ]
 
@@ -158,8 +159,17 @@ async function deployAndDeposit() {
     balanceDiv: balanceDiv.toString()
   })
 
+  console.log('Approve.')
+  await lpTokenERC20.approve(vault.address, ether('10000000000000'))
+
+  const allowance = await lpTokenERC20.allowance(accounts[0], vault.address)
+
+  console.log({
+    allowance: allowance.toString()
+  })
+
   console.log('Deposit.')
-  await vault.deposit(balanceDiv)
+  await vault.deposit('10000')
   console.log('Done')
 }
 
