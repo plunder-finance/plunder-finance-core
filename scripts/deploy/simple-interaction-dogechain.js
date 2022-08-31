@@ -12,7 +12,7 @@ const IERC20 = artifacts.require('@openzeppelin/contracts/token/ERC20/IERC20.sol
 const StrategyTriMiniChefDualLP = artifacts.require('StrategyTriMiniChefDualLP')
 const IERC20Extended = artifacts.require('IERC20Extended')
 
-const { deployTrisolarisMiniChefDualLPStrategy, deployUniV2ChefV1Strategy, deployTreasury } = require('./common');
+const { deployTrisolarisMiniChefDualLPStrategy, deployUniV2ChefV1Strategy } = require('./common');
 
 const ADDRESSES = ALL_ADDRESSES.DOGE
 
@@ -28,6 +28,19 @@ const APPROVAL_DELAY = 60 // seconds
 let poolId = 0
 
 
+async function deployTreasury (owner) {
+
+  console.log(`Deploying treasury..`);
+
+  const treasury = await PlunderFinanceTreasury.new({ from: owner })
+
+  console.log({
+    treasury: treasury.address
+  })
+
+  return treasury
+}
+
 async function main() {
 
   console.log(`Starting deployment on ${network.name}`)
@@ -37,42 +50,34 @@ async function main() {
     accounts
   })
 
-  // console.log({
-  //   accounts
-  // })
-  // const [owner, ] = accounts
+  const vaultAddress = '0x9Ed787cB8141FD90F1a1e65D1d47b8BAB30061ED'
+  const vault = await PlunderVault.at(vaultAddress)
 
-  const treasuryContract = await deployTreasury(accounts[0])
+  const lpTokenAddress = await vault.want()
+  const lpToken = await IUniV2Pair.at(lpTokenAddress)
 
-  const owner = accounts[0]
-  const treasury = treasuryContract.address
-  const feeRecipient = accounts[0]
-  const keeper1 = accounts[0]
-  const strategist1 = accounts[0]
+  const lpTokenERC20 = await IERC20.at(lpTokenAddress)
 
-  const POOLS = [
-    {
-      lpTokenAddress: ADDRESSES.YODESWAP.LP_TOKEN_WDOGE_USDC,
-      baseProtocolName: "YODESWAP",
-      baseProtocolSymbol: "YODE",
-      masterChef: ADDRESSES.YODESWAP.MASTER_CHEF,
-      dexTokenAddress: ADDRESSES.YODESWAP.DEX_TOKEN,
-      wrappedBaseLayerTokenAddress: ADDRESSES.WWDOGE,
-      router02Address: ADDRESSES.YODESWAP.ROUTER02,
-    }
-  ]
+  const token0Address = await lpToken.token0()
+  const token1Address = await lpToken.token1()
 
-  for (const pool of POOLS) {
-    await deployUniV2ChefV1Strategy(
-      {...pool,
-        owner,
-        treasury,
-        feeRecipient,
-        keeper1,
-        strategist1
-      }
-    )
-  }
+  console.log({
+    token0Address,
+    token1Address
+  })
+
+  const balance = await lpTokenERC20.balanceOf(accounts[0])
+  const balanceDiv = balance.divn(100)
+  console.log({
+    balance: balance.toString(),
+    balanceDiv: balanceDiv.toString()
+  })
+
+  await lpTokenERC20.approve(vault.address, ether('10000000000000'))
+
+  console.log('Deposit.')
+  await vault.deposit(balanceDiv)
+  console.log('Deposit done.')
 }
 
 main()

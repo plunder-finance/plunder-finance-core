@@ -56,6 +56,60 @@ const poolSample =   {
   createdAt: 1622123567,
 };
 
+async function deployTreasury (owner) {
+
+  console.log(`Deploying treasury..`);
+
+  const treasury = await PlunderFinanceTreasury.new({ from: owner })
+
+  console.log({
+    treasury: treasury.address
+  })
+
+  return treasury
+}
+
+
+
+function getUniV2PoolDescriptor({ vaultAddress, token0Symbol, token1Symbol, platformShortName, platformName }) {
+
+  return {
+    id: 'yode-usdc-wwdoge',
+    name: `${token0Symbol.toUpperCase()}-${token1Symbol.toUpperCase()} LP`,
+    token: `${token0Symbol.toUpperCase()}-${token1Symbol.toUpperCase()} LP`,
+    tokenDescription: platformName,
+    tokenAddress: '0x8DCeBE9f071562D52b5ABB17235f3bCA768C1e44',
+    tokenDecimals: 18,
+    tokenDescriptionUrl: '#',
+    earnedToken: `PV-YODE-LP-${token0Symbol.toUpperCase()}-${token1Symbol.toUpperCase()}`,
+    earnedTokenAddress: vaultAddress,
+    earnContractAddress: vaultAddress,
+    pricePerFullShare: 1,
+    tvl: 0,
+    oracle: 'lps',
+    oracleId: 'pv-usdc-wdoge',
+    oraclePrice: 0,
+    depositsPaused: false,
+    status: 'active',
+    platform: platformName,
+    assets: ['USDC', 'WWDOGE'],
+    risks: [
+      'COMPLEXITY_LOW',
+      'BATTLE_TESTED',
+      'IL_LOW',
+      'MCAP_LARGE',
+      'AUDIT',
+      'CONTRACTS_VERIFIED',
+      'OVER_COLLAT_ALGO_STABLECOIN',
+    ],
+    stratType: 'StratLP',
+    addLiquidityUrl: 'https://app.yodeswap.dog/exchange/add/0x765277EebeCA2e31912C9946eAe1021199B39C61/0xB7ddC6414bf4F5515b52D8BdD69973Ae205ff101',
+    buyTokenUrl:
+      '',
+    createdAt: Date.now(),
+  }
+}
+
 
 async function deployUniV2ChefV1Strategy({
    lpTokenAddress, owner, treasury, feeRecipient, keeper1, strategist1, baseProtocolName, masterChef, dexTokenAddress,
@@ -63,7 +117,6 @@ async function deployUniV2ChefV1Strategy({
   const uniswapV2Router02 = await IUniswapV2Router02.at(router02Address)
 
   const wethAddress = await uniswapV2Router02.WETH()
-
 
   const lpToken = await IUniV2Pair.at(lpTokenAddress)
 
@@ -276,5 +329,6 @@ async function deployTrisolarisMiniChefDualLPStrategy
 
 module.exports = {
   deployTrisolarisMiniChefDualLPStrategy,
-  deployUniV2ChefV1Strategy
+  deployUniV2ChefV1Strategy,
+  deployTreasury
 }
