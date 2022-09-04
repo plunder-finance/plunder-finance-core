@@ -11,6 +11,7 @@ const IUniV2Pair = artifacts.require('contracts/BIFI/interfaces/common/IUniswapV
 const IERC20 = artifacts.require('@openzeppelin/contracts/token/ERC20/IERC20.sol:IERC20')
 const StrategyTriMiniChefDualLP = artifacts.require('StrategyTriMiniChefDualLP')
 const IERC20Extended = artifacts.require('IERC20Extended')
+const StrategyYodeChefLP = artifacts.require('StrategyYodeChefLP')
 
 const { deployTrisolarisMiniChefDualLPStrategy, deployUniV2ChefV1Strategy, deployTreasury } = require('./common');
 
@@ -70,7 +71,8 @@ async function main() {
         treasury,
         feeRecipient,
         keeper1,
-        strategist1
+        strategist1,
+        strategyContract: StrategyYodeChefLP
       }
     )
   }

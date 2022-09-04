@@ -110,7 +110,7 @@ function getUniV2PoolDescriptor({ vaultAddress, token0Symbol, token1Symbol, plat
 
 async function deployUniV2ChefV1Strategy({
    lpTokenAddress, owner, treasury, feeRecipient, keeper1, strategist1, baseProtocolName, masterChef, dexTokenAddress,
-    baseProtocolSymbol, router02Address, wrappedBaseLayerTokenAddress, poolId }) {
+    baseProtocolSymbol, router02Address, wrappedBaseLayerTokenAddress, poolId, strategyContract }) {
   const uniswapV2Router02 = await IUniswapV2Router02.at(router02Address)
 
   const wethAddress = await uniswapV2Router02.WETH()
@@ -185,7 +185,7 @@ async function deployUniV2ChefV1Strategy({
         address[] memory _outputToLp1Route
    */
 
-  const strategy = await StrategyYodeChefLP.new(
+  const strategy = await strategyContract.new(
     want,
     poolId++,
     masterChef,

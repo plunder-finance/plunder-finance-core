@@ -12,6 +12,8 @@ const IERC20 = artifacts.require('@openzeppelin/contracts/token/ERC20/IERC20.sol
 const StrategyTriMiniChefDualLP = artifacts.require('StrategyTriMiniChefDualLP')
 const IERC20Extended = artifacts.require('IERC20Extended')
 
+const StrategyYodeV2LP = artifacts.require('StrategyYodeV2LP')
+
 const { deployTrisolarisMiniChefDualLPStrategy, deployUniV2ChefV1Strategy } = require('./common');
 
 const ADDRESSES = ALL_ADDRESSES.DOGE
@@ -39,6 +41,37 @@ async function deployTreasury (owner) {
   })
 
   return treasury
+}
+
+async function triggerHarvest() {
+
+  console.log(`Starting deployment on ${network.name}`)
+
+  const accounts = await web3.eth.getAccounts();
+  console.log({
+    accounts
+  })
+
+  const vaultAddress = '0x1275cCE3b55E2E6A977bCbBeBc21aF70c8351a1E'
+
+  const vault = await PlunderVault.at(vaultAddress)
+
+  console.log('Harvesting..')
+
+  const strategyAddr = await vault.strategy()
+  console.log({
+    strategyAddr
+  })
+
+  const strategy = await StrategyYodeV2LP.at(strategyAddr)
+
+  await strategy.harvest()
+
+  console.log('Done harvesting. Try again')
+
+  await strategy.harvest()
+
+  console.log('Done again.')
 }
 
 async function depositAction() {
@@ -174,7 +207,7 @@ async function deployAndDeposit() {
 }
 
 async function main() {
-  await deployAndDeposit()
+  await triggerHarvest()
 }
 
 main()
